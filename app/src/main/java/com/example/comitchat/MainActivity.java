@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.example.comitchat.fragments.ChatFragment;
 import com.example.comitchat.fragments.ContactFragment;
@@ -12,6 +13,7 @@ import com.example.comitchat.viewpager.adapter.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = R.string.app_name + MainActivity.class.getSimpleName();
     private Toolbar toolbar;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
+
+        Log.i(TAG, "onCreate: ");
 
     }
 }
