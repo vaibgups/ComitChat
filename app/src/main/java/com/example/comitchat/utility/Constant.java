@@ -1,6 +1,9 @@
 package com.example.comitchat.utility;
 
 public class Constant {
+
+    public static final String appName = "CometChat";
+
     public static final int REQUEST_CAMERA = 125;
     public static final int REQUEST_STORAGE = 225;
     public static final int REQUEST_CONTACTS = 325;

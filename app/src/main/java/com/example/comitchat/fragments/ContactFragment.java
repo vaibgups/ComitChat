@@ -12,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.comitchat.R;
+import com.example.comitchat.modal.ContactClass;
+import com.example.comitchat.utility.Constant;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,7 +24,10 @@ import java.util.ArrayList;
  */
 public class ContactFragment extends Fragment {
 
-    private static final String TAG = R.string.app_name + ContactFragment.class.getSimpleName();
+    private static final String TAG = Constant.appName + ContactFragment.class.getSimpleName();
+    
+    private ContactClass contactClass;
+    private List<ContactClass> contactClassList;
 
 
     public ContactFragment() {
@@ -36,11 +42,15 @@ public class ContactFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
+        
+        contactClassList = new ArrayList<>();
+        
         return view;
     }
 
 
     public void newContactUpdateInDB() {
+        Log.i(TAG, "newContactUpdateInDB: ");
         ContentResolver cr = getContext().getContentResolver();
         ArrayList<String> temp = new ArrayList<String>();
 
@@ -57,7 +67,11 @@ public class ContactFragment extends Fragment {
             if (name == "") {
                 name = "+91" + phnnumber;
             }
-            Log.i(TAG, "newContactUpdateInDB: " + name);
+            contactClass = new ContactClass();
+            contactClass.setName(name);
+            contactClass.setPhoneNumber(phoneNumber);
+            contactClassList.add(contactClass);
+            
 
            /* if(oldContacts.contains(phnnumber)) {
                 temp.add(phnnumber);
@@ -82,5 +96,6 @@ public class ContactFragment extends Fragment {
 
 
     }
+
 
 }
