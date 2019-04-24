@@ -8,6 +8,9 @@
     <string name="enter_uid">Enter Uid</string>
     <string name="wait">Please Wait</string>
     <string name="enter_uid_toast">Please Enter Uid</string>
+    <string name="name">Please Enter Name</string>
+    <string name="number">Please Enter Number</string>
+    <string name="emailId">Please Enter Email Id</string>
 
 
 </resources>
