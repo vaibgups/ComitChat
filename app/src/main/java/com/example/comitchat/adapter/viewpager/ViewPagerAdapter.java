@@ -1,4 +1,4 @@
-package com.example.comitchat.viewpager.adapter;
+package com.example.comitchat.adapter.viewpager;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;

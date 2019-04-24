@@ -4,7 +4,6 @@ package com.example.comitchat.utility;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.comitchat.MainActivity;
 import com.example.comitchat.R;
 
 public class PermissionUtil {

@@ -2,10 +2,35 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+         Customize your theme here.
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+
+       <!-- <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+        <item name="colorControlHighlight">@color/secondaryDarkColor</item>
+        <item name="android:textColorSecondary">@color/primaryTextColor</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black_24dp</item>
+        <item name="android:colorEdgeEffect">@color/secondaryDarkColor</item>
+        <item name="actionModeBackground">@color/shimmer_background</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="dialogCornerRadius">15dp</item>-->
+
+    </style>
+
+    <style name="AppTheme.HelpText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:color">@color/secondaryTextColor</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:paddingLeft">@dimen/mtrl_btn_padding_left</item>
+        <item name="android:paddingRight">@dimen/mtrl_btn_padding_right</item>
+        <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
+        <item name="strokeWidth">@dimen/mtrl_btn_stroke_size</item>
     </style>
 
 </resources>

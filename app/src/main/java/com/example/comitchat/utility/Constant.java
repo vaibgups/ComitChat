@@ -4,6 +4,9 @@ public class Constant {
 
     public static final String appName = "CometChat";
 
+    public static final String APP_ID  =  "1481ce47bb30d5";
+    public static final String API_KEY =  "9c71933c74117a241d4ff781a2474ae23c732692";
+
     public static final int REQUEST_CAMERA = 125;
     public static final int REQUEST_STORAGE = 225;
     public static final int REQUEST_CONTACTS = 325;

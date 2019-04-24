@@ -1,33 +1,25 @@
-package com.example.comitchat;
+package com.example.comitchat.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
+import com.example.comitchat.R;
 import com.example.comitchat.fragments.ChatFragment;
 import com.example.comitchat.fragments.ContactFragment;
 import com.example.comitchat.utility.Constant;
 import com.example.comitchat.utility.PermissionClass;
-import com.example.comitchat.utility.PermissionUtil;
-import com.example.comitchat.viewpager.adapter.ViewPagerAdapter;
+import com.example.comitchat.adapter.viewpager.ViewPagerAdapter;
 
 import java.util.ArrayList;
 

@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.comitchat.R;
+import com.example.comitchat.adapter.recyclerview.ContactAdapter;
 import com.example.comitchat.modal.ContactClass;
 import com.example.comitchat.utility.Constant;
 
@@ -28,6 +31,9 @@ public class ContactFragment extends Fragment {
     
     private ContactClass contactClass;
     private List<ContactClass> contactClassList;
+    private ContactAdapter contactAdapter;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
 
 
     public ContactFragment() {
@@ -42,10 +48,24 @@ public class ContactFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
-        
         contactClassList = new ArrayList<>();
+        newContactUpdateInDB();
+        init(view);
+
         
         return view;
+    }
+
+    private void init(View view) {
+
+        recyclerView = view.findViewById(R.id.contactFragmentRV);
+        contactAdapter = new ContactAdapter(getContext(),contactClassList);
+        recyclerView.setHasFixedSize(true);
+        linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(contactAdapter);
+
+
     }
 
 
