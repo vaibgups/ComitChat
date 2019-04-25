@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText textInputEditTextUid;
 
-    private Button login;
+    private Button login,signUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +36,13 @@ public class LoginActivity extends AppCompatActivity {
         textInputLayoutUid = findViewById(R.id.input_layout_uid);
         textInputEditTextUid = findViewById(R.id.guid);
         login = findViewById(R.id.btn_login);
+        signUp = findViewById(R.id.btn_sing_up);
         login.setOnClickListener(view -> login());
+        signUp.setOnClickListener(view -> signUp());
         Log.i(TAG, "init: ");
     }
+
+
 
 
     private void login() {
@@ -53,6 +57,10 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, getString(R.string.enter_uid_toast), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void signUp() {
+        startActivity(new Intent(this,RegisterActivity.class));
     }
 
     public void Login(String uid) {
