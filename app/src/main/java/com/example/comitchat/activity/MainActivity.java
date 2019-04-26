@@ -2,6 +2,7 @@ package com.example.comitchat.activity;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.ContactsContract;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.comitchat.R;
 import com.example.comitchat.fragments.ChatFragment;
 import com.example.comitchat.fragments.ContactFragment;
+import com.example.comitchat.modal.register.user.response.RegisterUserResponse;
 import com.example.comitchat.utility.Constant;
 import com.example.comitchat.utility.PermissionClass;
 import com.example.comitchat.adapter.viewpager.ViewPagerAdapter;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPagerAdapter viewPagerAdapter;
     private TabLayout tabLayout;
     private PermissionClass permissionClass;
+    private RegisterUserResponse registerUserResponse;
 
 
     @Override
@@ -39,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         permissionClass = new PermissionClass(this,this);
         permissionClass.contacts();
-        newContactUpdateInDB();
+        getIntentData();
+//        newContactUpdateInDB();
 
 
         toolbar = findViewById(R.id.toolbar);
@@ -48,8 +52,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab);
         ChatFragment chatFragment = new ChatFragment();
         ContactFragment contactFragment = new ContactFragment();
+        contactFragment.setIntentDataUserRegister(registerUserResponse);
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),2);
+
         viewPagerAdapter.addFragment(chatFragment,"Chat");
         viewPagerAdapter.addFragment(contactFragment,"Contact");
         viewPager.setAdapter(viewPagerAdapter);
@@ -60,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void getIntentData() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(RegisterUserResponse.class.getSimpleName())){
+            registerUserResponse = (RegisterUserResponse) intent.getSerializableExtra(RegisterUserResponse.class.getSimpleName());
+        }
+    }
 
 
     @Override

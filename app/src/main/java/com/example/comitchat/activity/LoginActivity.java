@@ -1,6 +1,7 @@
 package com.example.comitchat.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.User;
 import com.example.comitchat.R;
+import com.example.comitchat.modal.register.user.response.RegisterUserResponse;
 import com.example.comitchat.utility.Constant;
 
 public class LoginActivity extends AppCompatActivity {
@@ -25,14 +27,24 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button login,signUp;
 
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        init();
+        sharedPreferences = getSharedPreferences(RegisterUserResponse.class.getSimpleName(),MODE_PRIVATE);
+        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())){
+            startActivity(new Intent(LoginActivity.this,MainActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            finish();
+        }else{
+            setContentView(R.layout.activity_login);
+            init();
+        }
+
     }
 
     private void init() {
+
         textInputLayoutUid = findViewById(R.id.input_layout_uid);
         textInputEditTextUid = findViewById(R.id.guid);
         login = findViewById(R.id.btn_login);

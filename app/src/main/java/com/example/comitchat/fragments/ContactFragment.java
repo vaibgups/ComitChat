@@ -2,6 +2,7 @@ package com.example.comitchat.fragments;
 
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import com.example.comitchat.R;
 import com.example.comitchat.adapter.recyclerview.ContactAdapter;
 import com.example.comitchat.modal.ContactClass;
+import com.example.comitchat.modal.register.user.response.RegisterUserResponse;
 import com.example.comitchat.utility.Constant;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class ContactFragment extends Fragment {
     private ContactAdapter contactAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
+    private RegisterUserResponse registerUserResponse;
 
 
     public ContactFragment() {
@@ -51,6 +54,7 @@ public class ContactFragment extends Fragment {
         contactClassList = new ArrayList<>();
         newContactUpdateInDB();
         init(view);
+        Log.i(TAG, "onCreateView: registerUserResponse "+registerUserResponse.toString());
 
         
         return view;
@@ -116,6 +120,20 @@ public class ContactFragment extends Fragment {
 
 
     }
+
+    public void setIntentDataUserRegister(RegisterUserResponse registerUserResponse){
+        this.registerUserResponse = registerUserResponse;
+    }
+
+  /*  private void getIntentData() {
+        Bundle bundle = getArguments();
+        Intent intent =
+        if (intent.hasExtra(RegisterUserResponse.class.getSimpleName())){
+            registerUserResponse = (RegisterUserResponse) intent.getSerializableExtra(RegisterUserResponse.class.getSimpleName());
+        }
+    }*/
+
+
 
 
 }
