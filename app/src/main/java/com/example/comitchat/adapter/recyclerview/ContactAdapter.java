@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.comitchat.R;
-import com.example.comitchat.modal.ContactClass;
 import com.example.comitchat.modal.user.list.DataItem;
 
 import java.util.List;
@@ -21,10 +20,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 //    private ContactClass contactClass;
     private DataItem contactClass;
     private  List<DataItem>  contactClassList;
+    private OnClickListener onClickListener;
 
-    public ContactAdapter(Context context, List<DataItem> contactClassList) {
+    public ContactAdapter(Context context, List<DataItem> contactClassList, OnClickListener onClickListener) {
         this.context = context;
         this.contactClassList = contactClassList;
+        this.onClickListener = onClickListener;
     }
 
     @NonNull
@@ -36,10 +37,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        contactClass = contactClassList.get(i);
+    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int pos) {
+        contactClass = contactClassList.get(pos);
         myViewHolder.contactNameTextView.setText(contactClass.getName());
         myViewHolder.contactNumberTextView.setText(contactClass.getUid());
+        onClickListener.recyclerOnClickListener(pos);
     }
 
     @Override
@@ -58,6 +60,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         }
     }
 
+    public interface OnClickListener{
+        void recyclerOnClickListener(int pos);
+    }
 
 
 }

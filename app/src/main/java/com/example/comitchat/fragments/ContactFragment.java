@@ -1,6 +1,7 @@
 package com.example.comitchat.fragments;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,9 +20,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.comitchat.R;
+import com.example.comitchat.activity.OneToOneChatActivity;
 import com.example.comitchat.adapter.recyclerview.ContactAdapter;
 import com.example.comitchat.modal.ContactClass;
 
+import com.example.comitchat.modal.user.list.DataItem;
 import com.example.comitchat.modal.user.list.UserListResponse;
 import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.singleton.SingletonRequestQueue;
@@ -39,7 +42,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ContactFragment extends Fragment {
+public class ContactFragment extends Fragment implements ContactAdapter.OnClickListener {
 
     private static final String TAG = Constant.appName + ContactFragment.class.getSimpleName();
     
@@ -113,7 +116,7 @@ public class ContactFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         userListResponse = gson.fromJson(String.valueOf(response),UserListResponse.class);
                         Log.d(TAG, response.toString());
-                        contactAdapter = new ContactAdapter(getContext(),userListResponse.getData());
+                        contactAdapter = new ContactAdapter(getContext(),userListResponse.getData(), ContactFragment.this);
                         recyclerView.setAdapter(contactAdapter);
 
                     }
@@ -146,7 +149,10 @@ public class ContactFragment extends Fragment {
     }
 
 
-
-
-
+    @Override
+    public void recyclerOnClickListener(int pos) {
+        DataItem dataItem = userListResponse.getData().get(pos);
+        startActivity(new Intent(getContext(), OneToOneChatActivity.class)
+        .putExtra(DataItem.class.getSimpleName(),dataItem));
+    }
 }

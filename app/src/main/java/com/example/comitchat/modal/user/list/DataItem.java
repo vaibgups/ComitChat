@@ -3,8 +3,10 @@ package com.example.comitchat.modal.user.list;
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 @Generated("com.robohorse.robopojogenerator")
-public class DataItem{
+public class DataItem implements Serializable {
 
 	@SerializedName("uid")
 	private String uid;
