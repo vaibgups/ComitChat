@@ -1,11 +1,8 @@
 package com.example.comitchat.fragments;
 
 
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.database.Cursor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,14 +11,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.comitchat.R;
 import com.example.comitchat.adapter.recyclerview.ContactAdapter;
 import com.example.comitchat.modal.ContactClass;
-import com.example.comitchat.modal.register.user.response.RegisterUserResponse;
+
+import com.example.comitchat.modal.user.list.UserListResponse;
+import com.example.comitchat.modal.user.register.RegisterUserResponse;
+import com.example.comitchat.singleton.SingletonRequestQueue;
 import com.example.comitchat.utility.Constant;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -37,6 +49,10 @@ public class ContactFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private RegisterUserResponse registerUserResponse;
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+    private RequestQueue mRequestQueue;
+    private UserListResponse userListResponse;
 
 
     public ContactFragment() {
@@ -52,9 +68,16 @@ public class ContactFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
         contactClassList = new ArrayList<>();
-        newContactUpdateInDB();
+        /*sharedPreferences = getContext().getSharedPreferences(RegisterUserResponse.class.getSimpleName(), MODE_PRIVATE);
+        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())) {
+            String tempUserList = sharedPreferences.getString(RegisterUserResponse.class.getSimpleName(),"");
+            if (tempUserList != ""){
+
+            }
+
+        }*/
         init(view);
-        Log.i(TAG, "onCreateView: registerUserResponse "+registerUserResponse.toString());
+        getUserList();
 
         
         return view;
@@ -62,76 +85,66 @@ public class ContactFragment extends Fragment {
 
     private void init(View view) {
 
+        gson = new Gson();
         recyclerView = view.findViewById(R.id.contactFragmentRV);
-        contactAdapter = new ContactAdapter(getContext(),contactClassList);
         recyclerView.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(contactAdapter);
 
-
-    }
-
-
-    public void newContactUpdateInDB() {
-        Log.i(TAG, "newContactUpdateInDB: ");
-        ContentResolver cr = getContext().getContentResolver();
-        ArrayList<String> temp = new ArrayList<String>();
-
-        StringBuilder contacts = new StringBuilder();
-        Cursor phones = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        // use the cursor to access the contacts
-        while (phones.moveToNext()) {
-            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            String phnnumber;
-            phnnumber = phoneNumber.replaceAll("[\\s\\-()]", "");
-            phnnumber = phnnumber.replace("+91", "");
-            phnnumber = phnnumber.replaceFirst("^0+(?!$)", "");
-            if (name == "") {
-                name = "+91" + phnnumber;
-            }
-            contactClass = new ContactClass();
-            contactClass.setName(name);
-            contactClass.setPhoneNumber(phoneNumber);
-            contactClassList.add(contactClass);
-            
-
-           /* if(oldContacts.contains(phnnumber)) {
-                temp.add(phnnumber);
-            }else{
-                oldContacts.add(phnnumber);
-                int muteUnmuteFlag = 1;  // this muteUnmuteFlag 1 is use for ring the phone
-                int blockUnblockFlag = 1; // this blockUnblockFlag 1 is use for block the particular
-                // contacts so that block contact does not send and received msg
-
-
-                // imSecureDBAdapter.contactsUpdate(name, phnnumber, null, null);
-                imSecureDBAdapter.saveRecord(name, phnnumber, null, null,muteUnmuteFlag,blockUnblockFlag);
-            }
-            imSecureDBAdapter.upDateContactsNameFromPhoneContactsBook(name,phnnumber);
-        }
-        oldContacts.removeAll(temp);
-        for(String tempName : oldContacts){
-            imSecureDBAdapter.upDateContactsNameFromPhoneContactsBook(tempName,tempName);
-        }*/
-
-        }
 
 
     }
+
 
     public void setIntentDataUserRegister(RegisterUserResponse registerUserResponse){
         this.registerUserResponse = registerUserResponse;
     }
 
-  /*  private void getIntentData() {
-        Bundle bundle = getArguments();
-        Intent intent =
-        if (intent.hasExtra(RegisterUserResponse.class.getSimpleName())){
-            registerUserResponse = (RegisterUserResponse) intent.getSerializableExtra(RegisterUserResponse.class.getSimpleName());
-        }
-    }*/
+
+    private void getUserList() {
+
+
+        mRequestQueue = SingletonRequestQueue.getInstance(getContext()).getRequestQueue();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                Constant.GET_USER_LIST, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        userListResponse = gson.fromJson(String.valueOf(response),UserListResponse.class);
+                        Log.d(TAG, response.toString());
+                        contactAdapter = new ContactAdapter(getContext(),userListResponse.getData());
+                        recyclerView.setAdapter(contactAdapter);
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+            }
+        }) {
+
+            /**
+             * Passing some request headers
+             * */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+//                headers.put("Content-Type", "application/json");
+                headers.put("apikey", Constant.API_KEY);
+                headers.put("appid", Constant.APP_ID);
+                return headers;
+            }
+
+        };
+
+// Adding request to request queue
+        mRequestQueue.add(jsonObjReq);
+
+    }
+
 
 
 

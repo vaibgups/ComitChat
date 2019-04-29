@@ -18,7 +18,8 @@ import android.widget.Toast;
 import com.example.comitchat.R;
 import com.example.comitchat.fragments.ChatFragment;
 import com.example.comitchat.fragments.ContactFragment;
-import com.example.comitchat.modal.register.user.response.RegisterUserResponse;
+
+import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.utility.Constant;
 import com.example.comitchat.utility.PermissionClass;
 import com.example.comitchat.adapter.viewpager.ViewPagerAdapter;

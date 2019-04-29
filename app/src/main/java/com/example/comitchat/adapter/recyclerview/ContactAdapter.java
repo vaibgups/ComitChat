@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.comitchat.R;
 import com.example.comitchat.modal.ContactClass;
+import com.example.comitchat.modal.user.list.DataItem;
 
 import java.util.List;
 
@@ -17,10 +18,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
 
     private Context context;
-    private ContactClass contactClass;
-    private List<ContactClass> contactClassList;
+//    private ContactClass contactClass;
+    private DataItem contactClass;
+    private  List<DataItem>  contactClassList;
 
-    public ContactAdapter(Context context, List<ContactClass> contactClassList) {
+    public ContactAdapter(Context context, List<DataItem> contactClassList) {
         this.context = context;
         this.contactClassList = contactClassList;
     }
@@ -37,7 +39,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         contactClass = contactClassList.get(i);
         myViewHolder.contactNameTextView.setText(contactClass.getName());
-        myViewHolder.contactNumberTextView.setText(contactClass.getPhoneNumber());
+        myViewHolder.contactNumberTextView.setText(contactClass.getUid());
     }
 
     @Override

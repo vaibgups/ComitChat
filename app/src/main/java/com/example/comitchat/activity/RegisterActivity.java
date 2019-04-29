@@ -18,8 +18,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.comitchat.R;
+import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.modal.UserRegister;
-import com.example.comitchat.modal.register.user.response.RegisterUserResponse;
+
 import com.example.comitchat.singleton.SingletonRequestQueue;
 import com.example.comitchat.utility.Constant;
 import com.google.gson.Gson;
@@ -27,7 +28,6 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,11 +82,8 @@ public class RegisterActivity extends AppCompatActivity {
         userRegister.setEmail(email);
 
 //        JSONObject object = null;
-
-        String object = "{\"uid\":\"9015205466\",\"name\":\"Vaibhav Gupta\",\"email\":\"vaibgups@gmail.com\",\"status\":\"offline\",\"createdAt\":1556265226}";
-
-
-        RegisterUserResponse registerUserResponse = gson.fromJson(object, RegisterUserResponse.class);
+//        String object = "{\"uid\":\"9015205466\",\"name\":\"Vaibhav Gupta\",\"email\":\"vaibgups@gmail.com\",\"status\":\"offline\",\"createdAt\":1556265226}";
+//        RegisterUserResponse registerUserResponse = gson.fromJson(object, RegisterUserResponse.class);
 
         postRegisterUser(userRegister);
     }

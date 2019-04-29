@@ -2,10 +2,10 @@ package com.example.comitchat.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,30 +14,31 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.User;
 import com.example.comitchat.R;
-import com.example.comitchat.modal.register.user.response.RegisterUserResponse;
+import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.utility.Constant;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = Constant.appName+LoginActivity.class.getSimpleName();
+    private static final String TAG = Constant.appName + LoginActivity.class.getSimpleName();
 
     private TextInputLayout textInputLayoutUid;
 
     private TextInputEditText textInputEditTextUid;
 
-    private Button login,signUp;
+    private Button login, signUp;
 
     private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences(RegisterUserResponse.class.getSimpleName(),MODE_PRIVATE);
-        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())){
-            startActivity(new Intent(LoginActivity.this,MainActivity.class)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        setContentView(R.layout.activity_login);
+        sharedPreferences = getSharedPreferences(RegisterUserResponse.class.getSimpleName(), MODE_PRIVATE);
+        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
             finish();
-        }else{
-            setContentView(R.layout.activity_login);
+        } else {
             init();
         }
 
@@ -55,8 +56,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-
     private void login() {
         String uid = textInputEditTextUid.getText().toString().trim();
 
@@ -72,24 +71,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signUp() {
-        startActivity(new Intent(this,RegisterActivity.class));
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 
     public void Login(String uid) {
 
-        Log.i(TAG, "Login: with user id : "+uid);
+        Log.i(TAG, "Login: with user id : " + uid);
         CometChat.login(uid, Constant.API_KEY, new CometChat.CallbackListener<User>() {
 
             @Override
             public void onSuccess(User user) {
-                Log.i(TAG, "onSuccess: "+user.toString());
-                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                    finish();
+                Log.i(TAG, "onSuccess: " + user.toString());
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
             }
 
             @Override
             public void onError(CometChatException e) {
-                Log.e(TAG, "onError: "+e.getMessage() );
+                Log.e(TAG, "onError: " + e.getMessage());
                 e.printStackTrace();
             }
 

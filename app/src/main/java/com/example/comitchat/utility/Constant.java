@@ -16,4 +16,5 @@ public class Constant {
     public static final int TXT_STORAGE = 2;
     public static final int TXT_CONTACTS = 3;
     public static final String CREATE_USER = "https://api.cometchat.com/v1/users";
+    public static final String GET_USER_LIST = "https://api.cometchat.com/v1/users";
 }
