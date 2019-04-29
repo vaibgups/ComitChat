@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
         permissionClass = new PermissionClass(this,this);
         permissionClass.contacts();
         getIntentData();
-//        newContactUpdateInDB();
-
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -96,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             case Constant.REQUEST_CONTACTS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "You have contacts permission", Toast.LENGTH_SHORT).show();
-                    newContactUpdateInDB();
                 } else {
                     Toast.makeText(this, "You have not camera permission", Toast.LENGTH_SHORT).show();
                 }
@@ -124,50 +121,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
-    public void newContactUpdateInDB() {
-        ContentResolver cr = getApplicationContext().getContentResolver();
-        ArrayList<String> temp = new ArrayList<String>();
-
-        StringBuilder contacts = new StringBuilder();
-        Cursor phones = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        // use the cursor to access the contacts
-        while (phones.moveToNext()) {
-            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            String phnnumber;
-            phnnumber = phoneNumber.replaceAll("[\\s\\-()]", "");
-            phnnumber = phnnumber.replace("+91", "");
-            phnnumber = phnnumber.replaceFirst("^0+(?!$)", "");
-            if (name == "") {
-                name = "+91" + phnnumber;
-            }
-            Log.i(TAG, "newContactUpdateInDB: " + name);
-
-           /* if(oldContacts.contains(phnnumber)) {
-                temp.add(phnnumber);
-            }else{
-                oldContacts.add(phnnumber);
-                int muteUnmuteFlag = 1;  // this muteUnmuteFlag 1 is use for ring the phone
-                int blockUnblockFlag = 1; // this blockUnblockFlag 1 is use for block the particular
-                // contacts so that block contact does not send and received msg
-
-
-                // imSecureDBAdapter.contactsUpdate(name, phnnumber, null, null);
-                imSecureDBAdapter.saveRecord(name, phnnumber, null, null,muteUnmuteFlag,blockUnblockFlag);
-            }
-            imSecureDBAdapter.upDateContactsNameFromPhoneContactsBook(name,phnnumber);
-        }
-        oldContacts.removeAll(temp);
-        for(String tempName : oldContacts){
-            imSecureDBAdapter.upDateContactsNameFromPhoneContactsBook(tempName,tempName);
-        }*/
-
-        }
-
-
-    }
 
 
 

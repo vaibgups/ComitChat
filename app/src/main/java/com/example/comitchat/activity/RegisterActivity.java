@@ -18,9 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.comitchat.R;
-import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.modal.UserRegister;
-
+import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.singleton.SingletonRequestQueue;
 import com.example.comitchat.utility.Constant;
 import com.google.gson.Gson;
@@ -54,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void init() {
 
         gson = new Gson();
-        sharedPreferences = getSharedPreferences(RegisterUserResponse.class.getSimpleName(),MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(RegisterUserResponse.class.getSimpleName(), MODE_PRIVATE);
         editor = sharedPreferences.edit();
         textInput_first_name = findViewById(R.id.textInput_name);
         textInput_email_id = findViewById(R.id.textInput_emailId);
@@ -81,10 +80,6 @@ public class RegisterActivity extends AppCompatActivity {
         userRegister.setName(name);
         userRegister.setEmail(email);
 
-//        JSONObject object = null;
-//        String object = "{\"uid\":\"9015205466\",\"name\":\"Vaibhav Gupta\",\"email\":\"vaibgups@gmail.com\",\"status\":\"offline\",\"createdAt\":1556265226}";
-//        RegisterUserResponse registerUserResponse = gson.fromJson(object, RegisterUserResponse.class);
-
         postRegisterUser(userRegister);
     }
 
@@ -110,14 +105,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                             String userJSON = gson.toJson(object);
 
-                            editor.putString(RegisterUserResponse.class.getSimpleName(),userJSON);
+                            editor.putString(RegisterUserResponse.class.getSimpleName(), userJSON);
                             editor.commit();
 
                             RegisterUserResponse registerUserResponse = gson.fromJson(String.valueOf(object), RegisterUserResponse.class);
 
                             startActivity(new Intent(RegisterActivity.this, MainActivity.class)
-                                    .putExtra(RegisterUserResponse.class.getSimpleName(),  registerUserResponse)
-                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                    .putExtra(RegisterUserResponse.class.getSimpleName(), registerUserResponse)
+                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             finish();
                             Log.i(TAG, "onResponse: registerUserResponse \n" + registerUserResponse.toString());
                         } catch (JSONException e) {

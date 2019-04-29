@@ -14,8 +14,10 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.User;
 import com.example.comitchat.R;
+import com.example.comitchat.modal.UserRegister;
 import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.utility.Constant;
+import com.google.gson.Gson;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,6 +30,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button login, signUp;
 
     private SharedPreferences sharedPreferences;
+
+    private Gson gson;
+
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void init() {
 
+        gson = new Gson();
         textInputLayoutUid = findViewById(R.id.input_layout_uid);
         textInputEditTextUid = findViewById(R.id.guid);
         login = findViewById(R.id.btn_login);
@@ -81,6 +88,17 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(User user) {
+                UserRegister userRegister = new UserRegister();
+                userRegister.setUid(user.getUid());
+                userRegister.setEmail(user.getEmail());
+                userRegister.setName(user.getName());
+                String userJSON = gson.toJson(userRegister);
+
+                editor = sharedPreferences.edit();
+                editor.putString(RegisterUserResponse.class.getSimpleName(),userJSON);
+                editor.commit();
+
+
                 Log.i(TAG, "onSuccess: " + user.toString());
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
