@@ -15,14 +15,23 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.comitchat.R;
 import com.example.comitchat.fragments.ChatFragment;
 import com.example.comitchat.fragments.ContactFragment;
 
 import com.example.comitchat.modal.user.register.RegisterUserResponse;
+import com.example.comitchat.singleton.SingletonRequestQueue;
 import com.example.comitchat.utility.Constant;
 import com.example.comitchat.utility.PermissionClass;
 import com.example.comitchat.adapter.viewpager.ViewPagerAdapter;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -36,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private PermissionClass permissionClass;
     private RegisterUserResponse registerUserResponse;
 
+    private RequestQueue mRequestQueue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         permissionClass = new PermissionClass(this,this);
         permissionClass.contacts();
         getIntentData();
+//        test();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -124,6 +136,39 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    private void test() {
+
+        mRequestQueue = SingletonRequestQueue.getInstance(MainActivity.this).getRequestQueue();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                "http://demoarea.1akal.in/IMD_NCS/MIS/api/mobile_service/rise/", null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "onErrorResponse: " + error.getMessage());
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+            }
+        }) {
+
+            /**
+             * Passing some request headers
+             * */
+
+        };
+
+// Adding request to request queue
+        mRequestQueue.add(jsonObjReq);
+
+    }
 
 
 

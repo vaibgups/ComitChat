@@ -26,4 +26,7 @@
     <color name="green_100">#C8E6C9</color>
     <color name="red_100">#FFCDD2</color>
     <color name="red_600">#E53935</color>
+
+    <!-- Fully transparent, equivalent to 0x00000000 -->
+    <color name="transparent">#00000000</color>
 </resources>

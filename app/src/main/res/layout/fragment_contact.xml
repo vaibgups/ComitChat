@@ -12,6 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/contactFragmentRV"
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:paddingBottom="2dp"
         tools:listitem="@layout/contacts_view_layout"
         ></android.support.v7.widget.RecyclerView>
 

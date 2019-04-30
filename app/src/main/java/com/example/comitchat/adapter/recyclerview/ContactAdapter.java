@@ -41,7 +41,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         contactClass = contactClassList.get(pos);
         myViewHolder.contactNameTextView.setText(contactClass.getName());
         myViewHolder.contactNumberTextView.setText(contactClass.getUid());
-        onClickListener.recyclerOnClickListener(pos);
+
+
+
     }
 
     @Override
@@ -57,7 +59,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             super(itemView);
             contactNameTextView = itemView.findViewById(R.id.contact_name);
             contactNumberTextView = itemView.findViewById(R.id.contact_number);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickListener.recyclerOnClickListener(getAdapterPosition());
+                }
+            });
         }
+
+
     }
 
     public interface OnClickListener{

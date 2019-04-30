@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:elevation="4dp"
+    style="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
+    >
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/toolbar_chat_screen_name"
+                android:text="@string/chat_screen_name"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:singleLine="true"
+                android:textColor="@color/primaryLightColor"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/toolbar_chat_screen_name"
+                android:id="@+id/toolbar_chat_screen_number"
+                android:text="@string/chat_screen_number"
+                android:layout_marginTop="1dp"
+                android:singleLine="true"
+                android:textColor="@color/primaryLightColor"/>
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</android.support.v7.widget.Toolbar>
