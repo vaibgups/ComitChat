@@ -65,6 +65,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
                     onClickListener.recyclerOnClickListener(getAdapterPosition());
                 }
             });
+
+
+
+
         }
 
 

@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        sharedPreferences = getSharedPreferences(RegisterUserResponse.class.getSimpleName(), MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(Constant.appName, MODE_PRIVATE);
         if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         if (!uid.isEmpty()) {
             Toast.makeText(LoginActivity.this, getString(R.string.wait), Toast.LENGTH_SHORT).show();
 //            loginActivityPresenter.Login(uid);
-            Login(uid);
+                Login(uid);
         } else {
 
             Toast.makeText(LoginActivity.this, getString(R.string.enter_uid_toast), Toast.LENGTH_SHORT).show();

@@ -53,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void init() {
 
         gson = new Gson();
-        sharedPreferences = getSharedPreferences(RegisterUserResponse.class.getSimpleName(), MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(Constant.appName, MODE_PRIVATE);
         editor = sharedPreferences.edit();
         textInput_first_name = findViewById(R.id.textInput_name);
         textInput_email_id = findViewById(R.id.textInput_emailId);

@@ -3,6 +3,7 @@ package com.example.comitchat.activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.ContactsContract;
@@ -13,6 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -46,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private RegisterUserResponse registerUserResponse;
 
     private RequestQueue mRequestQueue;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
 
     @Override
@@ -55,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         permissionClass = new PermissionClass(this,this);
         permissionClass.contacts();
         getIntentData();
-//        test();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -134,44 +139,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-    private void test() {
-
-        mRequestQueue = SingletonRequestQueue.getInstance(MainActivity.this).getRequestQueue();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                "http://demoarea.1akal.in/IMD_NCS/MIS/api/mobile_service/rise/", null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, response.toString());
-
-
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse: " + error.getMessage());
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-
-            }
-        }) {
-
-            /**
-             * Passing some request headers
-             * */
-
-        };
-
-// Adding request to request queue
-        mRequestQueue.add(jsonObjReq);
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu,menu);
+        return true;
     }
 
-
-
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                sharedPreferences = getSharedPreferences(Constant.appName,MODE_PRIVATE);
+                if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())){
+                    editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.commit();
+                    startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

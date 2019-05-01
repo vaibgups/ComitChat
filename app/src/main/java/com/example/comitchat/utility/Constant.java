@@ -2,7 +2,7 @@ package com.example.comitchat.utility;
 
 public class Constant {
 
-    public static final String appName = " CometChat ";
+    public static final String appName = "CometChat ";
 
     public static final String APP_ID  =  "2427a9bdcb3a23";
     public static final String API_KEY =  "2859940e507b79b45b45355b11effeffb3248724";
