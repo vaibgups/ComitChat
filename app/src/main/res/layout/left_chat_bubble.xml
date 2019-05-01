@@ -18,7 +18,7 @@
         android:layout_margin="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lestSideTextView"
+        android:id="@+id/leftSideTextView"
         android:gravity=""
         android:text="Left side hcjgdsfnhgkdfgsgdsfgdsfgdsfgdfgdsfgdfgdfgdfgdsfgdsfgsdfgdsfgdfgdfgdfgdeggdgsdfgkdsgkhsdkgjkldsjglkdsjgksdjksdvcjsj"
         android:autoSizeMaxTextSize="10dp"

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,11 +19,16 @@ import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
 import com.example.comitchat.R;
+import com.example.comitchat.adapter.recyclerview.ChatScreenAdapter;
 import com.example.comitchat.modal.UserRegister;
 import com.example.comitchat.modal.user.list.DataItem;
 import com.example.comitchat.modal.user.register.RegisterUserResponse;
+import com.example.comitchat.pojo.Message;
 import com.example.comitchat.utility.Constant;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OneToOneChatActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -40,6 +47,11 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private SharedPreferences sharedPreferences;
     private UserRegister userRegister;
     private Gson gson;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private Message message;
+    private List<Message> messageList;
+    private ChatScreenAdapter chatScreenAdapter;
 
 
     @Override
@@ -70,10 +82,17 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private void init() {
 
         gson = new Gson();
+        messageList = new ArrayList<Message>();
+        chatScreenAdapter = new ChatScreenAdapter(messageList,OneToOneChatActivity.this);
         toolbarChatScreeName = findViewById(R.id.toolbar_chat_screen_name);
         toolbarChatScreeNumber = findViewById(R.id.toolbar_chat_screen_number);
         editTextChatMessage = findViewById(R.id.editTextChatMessage);
         ivBtnSend = findViewById(R.id.ivBtn_send);
+        recyclerView = findViewById(R.id.rvChatMessages);
+        linearLayoutManager = new LinearLayoutManager(OneToOneChatActivity.this,LinearLayoutManager.VERTICAL, false);        //        linearLayoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+//        recyclerView.getItemAnimator().setChangeDuration(0);
+        recyclerView.setAdapter(chatScreenAdapter);
         ivBtnSend.setOnClickListener(this);
 
     }
@@ -91,12 +110,24 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
 
     private void sendMessage() {
 
+        message = new Message();
         messageText =  editTextChatMessage.getText().toString();
+        message.setMyMsg(true);
+        message.setMessage(messageText);
+        message.setUid(userRegister.getUid());
+        message.setEmail(userRegister.getEmail());
+        message.setName(userRegister.getName());
+        messageList.add(message);
+        chatScreenAdapter = new ChatScreenAdapter(messageList,OneToOneChatActivity.this);
+        recyclerView.setAdapter(chatScreenAdapter);
+//        chatScreenAdapter.refreshMessage(messageList);
         TextMessage textMessage = new TextMessage(receiverID, messageText, messageType, receiverType);
 
         CometChat.sendMessage(textMessage, new CometChat.CallbackListener<TextMessage>() {
             @Override
             public void onSuccess(TextMessage textMessage) {
+
+
                 Log.d(TAG, "Message sent successfully: " + textMessage.toString());
             }
             @Override
