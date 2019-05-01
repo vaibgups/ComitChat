@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 public class ChatScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -31,9 +32,9 @@ public class ChatScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class ReightViewHolder extends RecyclerView.ViewHolder{
+    class RightViewHolder extends RecyclerView.ViewHolder{
 
-        public ReightViewHolder(@NonNull View itemView) {
+        public RightViewHolder(@NonNull View itemView) {
             super(itemView);
         }
     }
