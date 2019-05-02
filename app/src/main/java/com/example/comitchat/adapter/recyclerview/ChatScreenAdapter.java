@@ -2,10 +2,13 @@ package com.example.comitchat.adapter.recyclerview;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.comitchat.R;
@@ -37,9 +40,8 @@ public class ChatScreenAdapter extends RecyclerView.Adapter<ChatScreenAdapter.Ri
     @Override
     public RightViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View rightTextMessageView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.right_chat_bubble, viewGroup, false);
-        return new RightViewHolder(rightTextMessageView);
+        View view =  LayoutInflater.from(context).inflate(R.layout.right_chat_bubble,viewGroup,false);
+        return new RightViewHolder(view);
        /* switch (i) {
 
             case RIGHT_TEXT_MESSAGE: {
@@ -68,12 +70,21 @@ public class ChatScreenAdapter extends RecyclerView.Adapter<ChatScreenAdapter.Ri
 
         if (message.isMyMsg()) {
 
-            RightViewHolder rightTextMessageView = (RightViewHolder) viewHolder;
-            rightTextMessageView.textView.setText(message.getMessage());
-        }/*else if (!message.isMyMsg()){
-            LeftViewHolder leftViewHolder = (LeftViewHolder) viewHolder;
-            leftViewHolder.textView.setText(message.getMessage());
-        }*/
+            viewHolder.linearLayoutLeft.setVisibility(View.GONE);
+            viewHolder.linearLayoutRight.setVisibility(View.VISIBLE);
+            viewHolder.rightSideTextView.setText(message.getMessage());
+        }else if (!message.isMyMsg()){
+            viewHolder.linearLayoutRight.setVisibility(View.GONE);
+            viewHolder.linearLayoutLeft.setVisibility(View.VISIBLE);
+            viewHolder.leftSideTextView.setText(message.getMessage());
+//            viewHolder.linearLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_chat_received_bubble__yellow24dp));
+//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)viewHolder.linearLayout.getLayoutParams();
+//            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//            params.addRule(RelativeLayout.LEFT_OF, R.id.id_to_be_left_of);
+
+//            viewHolder.linearLayout.setLayoutParams(params);
+//            viewHolder.rightSideTextView.setText(message.getMessage());
+        }
     }
 
     @Override
@@ -85,24 +96,32 @@ public class ChatScreenAdapter extends RecyclerView.Adapter<ChatScreenAdapter.Ri
         this.messageList = messageList;
         notifyDataSetChanged();
     }
+/*
     class LeftViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textView;
+        TextView rightSideTextView;
 
 
         public LeftViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.leftSideTextView);
+            rightSideTextView = itemView.findViewById(R.id.leftSideTextView);
         }
     }
+*/
 
     class RightViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textView;
+        TextView rightSideTextView,leftSideTextView;
+        LinearLayout linearLayoutRight;
+        View linearLayoutLeft;
+
 
         public RightViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.rightSideTextView);
+            rightSideTextView = itemView.findViewById(R.id.rightSideTextView);
+            leftSideTextView = itemView.findViewById(R.id.leftSideTextView);
+            linearLayoutLeft = itemView.findViewById(R.id.leftContainer);
+            linearLayoutRight = itemView.findViewById(R.id.rightContainer);
         }
     }
 }

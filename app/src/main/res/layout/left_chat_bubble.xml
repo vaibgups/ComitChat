@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
+        android:layout_alignParentLeft="true"
         android:background="@drawable/ic_chat_received_bubble__yellow24dp"
 
         >
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/leftSideTextView"
         android:gravity=""
-        android:text="Left side hcjgdsfnhgkdfgsgdsfgdsfgdsfgdfgdsfgdfgdfgdfgdsfgdsfgsdfgdsfgdfgdfgdfgdeggdgsdfgkdsgkhsdkgjkldsjglkdsjgksdjksdvcjsj"
+        android:text="Left side"
         android:autoSizeMaxTextSize="10dp"
         android:textColor="@color/primaryTextColor"/>
 

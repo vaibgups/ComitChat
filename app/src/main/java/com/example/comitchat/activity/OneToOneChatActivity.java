@@ -2,6 +2,7 @@ package com.example.comitchat.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,6 +53,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private Message message;
     private List<Message> messageList;
     private ChatScreenAdapter chatScreenAdapter;
+    private int newMessageCount;
 
 
     @Override
@@ -76,6 +78,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         }
 
 
+//        test();
 
     }
 
@@ -95,6 +98,48 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         recyclerView.setAdapter(chatScreenAdapter);
         ivBtnSend.setOnClickListener(this);
 
+
+    }
+
+    private void test() {
+        message = new Message();
+        messageText =  "Message 1";
+        message.setMyMsg(true);
+        message.setMessage(messageText);
+        message.setUid(userRegister.getUid());
+        message.setEmail(userRegister.getEmail());
+        message.setName(userRegister.getName());
+        messageList.add(message);
+
+        message = new Message();
+        messageText =  "Message 2";
+        message.setMyMsg(true);
+        message.setMessage(messageText);
+        message.setUid(userRegister.getUid());
+        message.setEmail(userRegister.getEmail());
+        message.setName(userRegister.getName());
+        messageList.add(message);
+
+        chatScreenAdapter.notifyDataSetChanged();
+
+
+        if (chatScreenAdapter != null) {
+            newMessageCount++;
+            chatScreenAdapter.refreshMessage(messageList);
+
+            if ((chatScreenAdapter.getItemCount() - 1) - linearLayoutManager.findLastVisibleItemPosition() < 5) {
+                recyclerView.scrollToPosition(chatScreenAdapter.getItemCount() - 1);
+                newMessageCount = 0;
+            } else {
+//                btnScroll.setVisibility(View.VISIBLE);
+//                btnScroll.setText(newMessageCount + " " + getString(R.string.new_message));
+//                AnimUtil.getShakeAnimation(btnScroll);
+//                btnScroll.getBackground().setColorFilter(getResources().getColor(R.color.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+
+            }
+        }
+
+//        chatScreenAdapter.refreshMessage(messageList);
     }
 
     @Override
@@ -112,15 +157,15 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
 
         message = new Message();
         messageText =  editTextChatMessage.getText().toString();
+        editTextChatMessage.setText("");
         message.setMyMsg(true);
         message.setMessage(messageText);
         message.setUid(userRegister.getUid());
         message.setEmail(userRegister.getEmail());
         message.setName(userRegister.getName());
         messageList.add(message);
-        chatScreenAdapter = new ChatScreenAdapter(messageList,OneToOneChatActivity.this);
-        recyclerView.setAdapter(chatScreenAdapter);
-//        chatScreenAdapter.refreshMessage(messageList);
+        chatScreenAdapter.notifyDataSetChanged();
+        setScroll();
         TextMessage textMessage = new TextMessage(receiverID, messageText, messageType, receiverType);
 
         CometChat.sendMessage(textMessage, new CometChat.CallbackListener<TextMessage>() {
@@ -137,6 +182,18 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
+    private void setScroll() {
+        if (chatScreenAdapter != null) {
+            newMessageCount++;
+            chatScreenAdapter.refreshMessage(messageList);
+
+            if ((chatScreenAdapter.getItemCount() - 1) - linearLayoutManager.findLastVisibleItemPosition() < 5) {
+                recyclerView.scrollToPosition(chatScreenAdapter.getItemCount() - 1);
+                newMessageCount = 0;
+            }
+        }
+    }
+
 
     @Override
     protected void onResume() {
@@ -148,6 +205,15 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         CometChat.addMessageListener(userRegister.getUid(), new CometChat.MessageListener() {
             @Override
             public void onTextMessageReceived(TextMessage textMessage) {
+                message = new Message();
+                message.setMessage(textMessage.getText());
+                message.setMyMsg(false);
+                message.setEmail(textMessage.getSender().getEmail());
+                message.setName(textMessage.getSender().getName());
+                message.setUid(textMessage.getSender().getUid());
+                messageList.add(message);
+                chatScreenAdapter.notifyDataSetChanged();
+                setScroll();
                 Log.d(TAG, "Text message received successfully: " + textMessage.toString());
             }
             @Override

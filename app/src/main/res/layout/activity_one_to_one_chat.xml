@@ -17,7 +17,7 @@
 
     <RelativeLayout
         android:id="@+id/rl_chat_container"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_chat_screen_number_one_to_one"
         android:layout_above="@+id/rl_chatBox">
@@ -27,12 +27,11 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvChatMessages"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#fff"
             android:divider="@null"
-            android:dividerHeight="0dp"
-            android:paddingBottom="2dp"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            />
 
     </RelativeLayout>
 
