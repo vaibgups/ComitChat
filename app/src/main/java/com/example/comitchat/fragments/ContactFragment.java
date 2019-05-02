@@ -22,8 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.comitchat.R;
 import com.example.comitchat.activity.OneToOneChatActivity;
 import com.example.comitchat.adapter.recyclerview.ContactAdapter;
-import com.example.comitchat.modal.ContactClass;
-
+import com.example.comitchat.modal.UserRegister;
 import com.example.comitchat.modal.user.list.DataItem;
 import com.example.comitchat.modal.user.list.UserListResponse;
 import com.example.comitchat.modal.user.register.RegisterUserResponse;
@@ -38,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,9 +46,8 @@ import java.util.Map;
 public class ContactFragment extends Fragment implements ContactAdapter.OnClickListener {
 
     private static final String TAG = Constant.appName + ContactFragment.class.getSimpleName();
-    
-    private ContactClass contactClass;
-    private List<ContactClass> contactClassList;
+
+    private List<DataItem> dataItemList;
     private ContactAdapter contactAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -56,6 +56,7 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
     private Gson gson;
     private RequestQueue mRequestQueue;
     private UserListResponse userListResponse;
+    private UserRegister userRegister;
 
 
     public ContactFragment() {
@@ -70,19 +71,16 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
-        contactClassList = new ArrayList<>();
-        /*sharedPreferences = getContext().getSharedPreferences(RegisterUserResponse.class.getSimpleName(), MODE_PRIVATE);
-        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())) {
-            String tempUserList = sharedPreferences.getString(RegisterUserResponse.class.getSimpleName(),"");
-            if (tempUserList != ""){
-
-            }
-
-        }*/
+        dataItemList = new ArrayList<>();
         init(view);
+        sharedPreferences = getContext().getSharedPreferences(Constant.appName, MODE_PRIVATE);
+        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())) {
+            String userDetails = sharedPreferences.getString(RegisterUserResponse.class.getSimpleName(), "");
+            if (userDetails != "") {
+                userRegister = (UserRegister) gson.fromJson(userDetails, UserRegister.class);
+            }
+        }
         getUserList();
-
-        
         return view;
     }
 
@@ -91,15 +89,14 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
         gson = new Gson();
         recyclerView = view.findViewById(R.id.contactFragmentRV);
         recyclerView.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-
 
 
     }
 
 
-    public void setIntentDataUserRegister(RegisterUserResponse registerUserResponse){
+    public void setIntentDataUserRegister(RegisterUserResponse registerUserResponse) {
         this.registerUserResponse = registerUserResponse;
     }
 
@@ -114,9 +111,14 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        userListResponse = gson.fromJson(String.valueOf(response),UserListResponse.class);
+                        userListResponse = gson.fromJson(String.valueOf(response), UserListResponse.class);
+                        for (DataItem dataItem : userListResponse.getData()) {
+                            if (!dataItem.getUid().equals(userRegister.getUid())  ) {
+                                dataItemList.add(dataItem);
+                            }
+                        }
                         Log.d(TAG, response.toString());
-                        contactAdapter = new ContactAdapter(getContext(),userListResponse.getData(), ContactFragment.this);
+                        contactAdapter = new ContactAdapter(getContext(), dataItemList, ContactFragment.this);
                         recyclerView.setAdapter(contactAdapter);
 
                     }
@@ -151,8 +153,8 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
 
     @Override
     public void recyclerOnClickListener(int pos) {
-        DataItem dataItem = userListResponse.getData().get(pos);
+        DataItem dataItem = dataItemList.get(pos);
         startActivity(new Intent(getContext(), OneToOneChatActivity.class)
-        .putExtra(DataItem.class.getSimpleName(),dataItem));
+                .putExtra(DataItem.class.getSimpleName(), dataItem));
     }
 }

@@ -77,9 +77,6 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
            }
         }
 
-
-//        test();
-
     }
 
     private void init() {
@@ -94,52 +91,10 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         recyclerView = findViewById(R.id.rvChatMessages);
         linearLayoutManager = new LinearLayoutManager(OneToOneChatActivity.this,LinearLayoutManager.VERTICAL, false);        //        linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.getItemAnimator().setChangeDuration(0);
         recyclerView.setAdapter(chatScreenAdapter);
         ivBtnSend.setOnClickListener(this);
 
 
-    }
-
-    private void test() {
-        message = new Message();
-        messageText =  "Message 1";
-        message.setMyMsg(true);
-        message.setMessage(messageText);
-        message.setUid(userRegister.getUid());
-        message.setEmail(userRegister.getEmail());
-        message.setName(userRegister.getName());
-        messageList.add(message);
-
-        message = new Message();
-        messageText =  "Message 2";
-        message.setMyMsg(true);
-        message.setMessage(messageText);
-        message.setUid(userRegister.getUid());
-        message.setEmail(userRegister.getEmail());
-        message.setName(userRegister.getName());
-        messageList.add(message);
-
-        chatScreenAdapter.notifyDataSetChanged();
-
-
-        if (chatScreenAdapter != null) {
-            newMessageCount++;
-            chatScreenAdapter.refreshMessage(messageList);
-
-            if ((chatScreenAdapter.getItemCount() - 1) - linearLayoutManager.findLastVisibleItemPosition() < 5) {
-                recyclerView.scrollToPosition(chatScreenAdapter.getItemCount() - 1);
-                newMessageCount = 0;
-            } else {
-//                btnScroll.setVisibility(View.VISIBLE);
-//                btnScroll.setText(newMessageCount + " " + getString(R.string.new_message));
-//                AnimUtil.getShakeAnimation(btnScroll);
-//                btnScroll.getBackground().setColorFilter(getResources().getColor(R.color.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-
-            }
-        }
-
-//        chatScreenAdapter.refreshMessage(messageList);
     }
 
     @Override
