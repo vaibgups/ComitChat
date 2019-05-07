@@ -156,6 +156,12 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         receivedMessage();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CometChat.removeMessageListener(listenerID);
+    }
+
     private void receivedMessage() {
         CometChat.addMessageListener(userRegister.getUid(), new CometChat.MessageListener() {
             @Override

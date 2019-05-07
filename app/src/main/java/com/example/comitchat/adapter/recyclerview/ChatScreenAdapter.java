@@ -77,13 +77,6 @@ public class ChatScreenAdapter extends RecyclerView.Adapter<ChatScreenAdapter.Ri
             viewHolder.linearLayoutRight.setVisibility(View.GONE);
             viewHolder.linearLayoutLeft.setVisibility(View.VISIBLE);
             viewHolder.leftSideTextView.setText(message.getMessage());
-//            viewHolder.linearLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_chat_received_bubble__yellow24dp));
-//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)viewHolder.linearLayout.getLayoutParams();
-//            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//            params.addRule(RelativeLayout.LEFT_OF, R.id.id_to_be_left_of);
-
-//            viewHolder.linearLayout.setLayoutParams(params);
-//            viewHolder.rightSideTextView.setText(message.getMessage());
         }
     }
 

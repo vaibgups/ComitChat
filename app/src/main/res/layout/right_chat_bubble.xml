@@ -17,6 +17,7 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/ic_chat_send_bubble_green_24dp"
 
+        android:rotation="180"
         >
         <TextView
             android:padding="15dp"
@@ -27,6 +28,7 @@
             android:gravity=""
             android:text="Right side"
             android:autoSizeMaxTextSize="10dp"
+            android:rotation="-180"
             android:textColor="@color/primaryTextColor"/>
 
     </LinearLayout>

@@ -112,13 +112,13 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
                     @Override
                     public void onResponse(JSONObject response) {
                         userListResponse = gson.fromJson(String.valueOf(response), UserListResponse.class);
-                        for (DataItem dataItem : userListResponse.getData()) {
+                        /*for (DataItem dataItem : userListResponse.getData()) {
                             if (!dataItem.getUid().equals(userRegister.getUid())  ) {
                                 dataItemList.add(dataItem);
                             }
-                        }
+                        }*/
                         Log.d(TAG, response.toString());
-                        contactAdapter = new ContactAdapter(getContext(), dataItemList, ContactFragment.this);
+                        contactAdapter = new ContactAdapter(getContext(), userListResponse.getData(), ContactFragment.this);
                         recyclerView.setAdapter(contactAdapter);
 
                     }
@@ -153,7 +153,7 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
 
     @Override
     public void recyclerOnClickListener(int pos) {
-        DataItem dataItem = dataItemList.get(pos);
+        DataItem dataItem = userListResponse.getData().get(pos);
         startActivity(new Intent(getContext(), OneToOneChatActivity.class)
                 .putExtra(DataItem.class.getSimpleName(), dataItem));
     }
