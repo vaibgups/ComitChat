@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Message {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     private int id;
     @NonNull
