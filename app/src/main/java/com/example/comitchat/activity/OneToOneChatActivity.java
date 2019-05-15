@@ -2,14 +2,15 @@ package com.example.comitchat.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.example.comitchat.modal.user.list.DataItem;
 import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.pojo.Message;
 import com.example.comitchat.utility.Constant;
+import com.example.comitchat.view.model.MessageEntityViewModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private List<Message> messageList;
     private ChatScreenAdapter chatScreenAdapter;
     private int newMessageCount;
+    private MessageEntityViewModel messageEntityViewModel;
 
 
     @Override
@@ -81,6 +84,8 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
 
     private void init() {
 
+        messageEntityViewModel = ViewModelProviders.of(OneToOneChatActivity.this).get(MessageEntityViewModel.class);
+
         gson = new Gson();
         messageList = new ArrayList<Message>();
         chatScreenAdapter = new ChatScreenAdapter(messageList,OneToOneChatActivity.this);
@@ -89,10 +94,11 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         editTextChatMessage = findViewById(R.id.editTextChatMessage);
         ivBtnSend = findViewById(R.id.ivBtn_send);
         recyclerView = findViewById(R.id.rvChatMessages);
-        linearLayoutManager = new LinearLayoutManager(OneToOneChatActivity.this,LinearLayoutManager.VERTICAL, false);        //        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager = new LinearLayoutManager(OneToOneChatActivity.this,RecyclerView.VERTICAL, false);        //        linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(chatScreenAdapter);
         ivBtnSend.setOnClickListener(this);
+
 
 
     }
@@ -119,6 +125,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         message.setEmail(userRegister.getEmail());
         message.setName(userRegister.getName());
         messageList.add(message);
+        saveMessage(message);
         chatScreenAdapter.notifyDataSetChanged();
         setScroll();
         TextMessage textMessage = new TextMessage(receiverID, messageText, messageType, receiverType);
@@ -135,6 +142,19 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
                 Log.d(TAG, "Message sending failed with exception: " + e.getMessage());
             }
         });
+    }
+
+    private void saveMessage(Message message) {
+        com.example.comitchat.entity.Message messageEntity = new com.example.comitchat.entity.Message();
+        messageEntity.setFriendUid(message.getUid());
+        messageEntity.setMyUid(userRegister.getUid());
+        messageEntity.setEmail(message.getEmail());
+        messageEntity.setName(message.getName());
+        messageEntity.setMessage(message.getMessage());
+        messageEntity.setMyMsg(message.isMyMsg());
+        messageEntityViewModel.insertMessage(messageEntity);
+
+
     }
 
     private void setScroll() {
@@ -162,6 +182,12 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         CometChat.removeMessageListener(listenerID);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CometChat.removeMessageListener(listenerID);
+    }
+
     private void receivedMessage() {
         CometChat.addMessageListener(userRegister.getUid(), new CometChat.MessageListener() {
             @Override
@@ -172,6 +198,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
                 message.setEmail(textMessage.getSender().getEmail());
                 message.setName(textMessage.getSender().getName());
                 message.setUid(textMessage.getSender().getUid());
+                saveMessage(message);
                 messageList.add(message);
                 chatScreenAdapter.notifyDataSetChanged();
                 setScroll();
