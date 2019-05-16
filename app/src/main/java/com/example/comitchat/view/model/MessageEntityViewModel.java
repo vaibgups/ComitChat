@@ -8,7 +8,7 @@ import com.example.comitchat.dao.MessageDao;
 import com.example.comitchat.db.CometChatDB;
 import com.example.comitchat.entity.Message;
 
-
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -32,11 +32,15 @@ public class MessageEntityViewModel extends AndroidViewModel {
         Log.i(TAG, "onCleared: AndroidViewModel Destroy");
     }
 
-    public void insertMessage(Message message){
+    public void insertMessage(Message message) {
         new InsertMessageAsync(messageDao).execute(message);
     }
 
-
+    public Message[] getFriendMessage(String friend) {
+//        return messageDao.getMessage(friend);
+        new GetFriendMessageAsync(messageDao).execute(friend);
+      return null;
+    }
 
     private class InsertMessageAsync extends AsyncTask<Message, Void, Void> {
 
@@ -48,9 +52,32 @@ public class MessageEntityViewModel extends AndroidViewModel {
 
         @Override
         protected Void doInBackground(Message... messages) {
-            messageDao.insert(messages[0]);
+            long id = messageDao.insert(messages[0]);
             Log.i(TAG, "doInBackground: message inserted successful");
+            Log.i(TAG, "doInBackground: id " + id);
+            Log.i(TAG, "doInBackground: " + messages[0].toString());
+
+
             return null;
+        }
+    }
+
+    private class GetFriendMessageAsync extends AsyncTask<String,Void,Message[]>{
+
+        MessageDao messageDao;
+        public GetFriendMessageAsync(MessageDao messageDao) {
+            this.messageDao = messageDao;
+        }
+
+        @Override
+        protected Message[] doInBackground(String... strings) {
+
+            return messageDao.getMessage(strings[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Message[] messages) {
+            return;
         }
     }
 }

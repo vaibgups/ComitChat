@@ -3,18 +3,27 @@ package com.example.comitchat.pojo;
 public class Message {
 
 
-    private String uid;
+    private String friendUid;
+    private String myUid;
     private String name;
     private String email;
     private boolean isMyMsg;
     private String message = "";
 
-    public String getUid() {
-        return uid;
+    public String getFriendUid() {
+        return friendUid;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setFriendUid(String friendUid) {
+        this.friendUid = friendUid;
+    }
+
+    public String getMyUid() {
+        return myUid;
+    }
+
+    public void setMyUid(String myUid) {
+        this.myUid = myUid;
     }
 
     public String getName() {

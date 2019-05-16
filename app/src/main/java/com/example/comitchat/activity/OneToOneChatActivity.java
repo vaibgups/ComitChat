@@ -85,6 +85,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private void init() {
 
         messageEntityViewModel = ViewModelProviders.of(OneToOneChatActivity.this).get(MessageEntityViewModel.class);
+        com.example.comitchat.entity.Message[] message1 = messageEntityViewModel.getFriendMessage(receiverID);
 
         gson = new Gson();
         messageList = new ArrayList<Message>();
@@ -121,7 +122,8 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         editTextChatMessage.setText("");
         message.setMyMsg(true);
         message.setMessage(messageText);
-        message.setUid(userRegister.getUid());
+        message.setMyUid(userRegister.getUid());
+        message.setFriendUid(receiverID);
         message.setEmail(userRegister.getEmail());
         message.setName(userRegister.getName());
         messageList.add(message);
@@ -146,8 +148,8 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
 
     private void saveMessage(Message message) {
         com.example.comitchat.entity.Message messageEntity = new com.example.comitchat.entity.Message();
-        messageEntity.setFriendUid(message.getUid());
-        messageEntity.setMyUid(userRegister.getUid());
+        messageEntity.setFriendUid(message.getFriendUid());
+        messageEntity.setMyUid(message.getMyUid());
         messageEntity.setEmail(message.getEmail());
         messageEntity.setName(message.getName());
         messageEntity.setMessage(message.getMessage());
@@ -197,7 +199,8 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
                 message.setMyMsg(false);
                 message.setEmail(textMessage.getSender().getEmail());
                 message.setName(textMessage.getSender().getName());
-                message.setUid(textMessage.getSender().getUid());
+                message.setFriendUid(textMessage.getSender().getUid());
+                message.setMyUid(userRegister.getUid());
                 saveMessage(message);
                 messageList.add(message);
                 chatScreenAdapter.notifyDataSetChanged();
