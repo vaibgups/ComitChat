@@ -20,11 +20,13 @@ public class MessageEntityViewModel extends AndroidViewModel {
 
     private MessageDao messageDao;
     private CometChatDB cometChatDB;
+    private LiveData<List<Message>> listLiveDataMessage;
 
     public MessageEntityViewModel(@NonNull Application application) {
         super(application);
         cometChatDB = CometChatDB.getCometChatDB(application);
         messageDao = cometChatDB.messageDao();
+
     }
 
     @Override

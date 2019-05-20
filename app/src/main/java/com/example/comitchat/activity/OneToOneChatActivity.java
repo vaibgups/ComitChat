@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -89,7 +90,19 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private void init() {
 
         messageEntityViewModel = ViewModelProviders.of(OneToOneChatActivity.this).get(MessageEntityViewModel.class);
-        LiveData<List<com.example.comitchat.entity.Message>> message1 = messageEntityViewModel.getFriendMessage(receiverID);
+        messageEntityViewModel.getFriendMessage(receiverID).observe(OneToOneChatActivity.this, new Observer<List<com.example.comitchat.entity.Message>>() {
+            @Override
+            public void onChanged(List<com.example.comitchat.entity.Message> messages) {
+                if(messages != null)
+                {
+                    for (com.example.comitchat.entity.Message message : messages){
+                        Log.i(TAG, "onChanged: live data"+ message.toString());
+                    }
+                }
+
+            }
+        });
+//        LiveData<List<com.example.comitchat.entity.Message>> message1 = messageEntityViewModel.getFriendMessage(receiverID);
 
 
        /* Message message = new Message();
