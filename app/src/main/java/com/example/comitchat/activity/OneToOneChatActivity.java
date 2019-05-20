@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,9 @@ import com.example.comitchat.utility.Constant;
 import com.example.comitchat.view.model.MessageEntityViewModel;
 import com.google.gson.Gson;
 
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,8 +89,22 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private void init() {
 
         messageEntityViewModel = ViewModelProviders.of(OneToOneChatActivity.this).get(MessageEntityViewModel.class);
-        com.example.comitchat.entity.Message[] message1 = messageEntityViewModel.getFriendMessage(receiverID);
+        LiveData<List<com.example.comitchat.entity.Message>> message1 = messageEntityViewModel.getFriendMessage(receiverID);
 
+
+       /* Message message = new Message();
+        try {
+
+            BeanUtils.copyProperties(message,message1.getValue().get(0));
+            Log.i(TAG, "init: "+message1.getValue().get(0).toString());
+            Log.i(TAG, "init: "+message.toString());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }catch (Exception e){
+
+        }*/
         gson = new Gson();
         messageList = new ArrayList<Message>();
         chatScreenAdapter = new ChatScreenAdapter(messageList,OneToOneChatActivity.this);

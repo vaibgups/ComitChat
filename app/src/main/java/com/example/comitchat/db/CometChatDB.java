@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.comitchat.dao.MessageDao;
 import com.example.comitchat.entity.Message;
+import com.example.comitchat.utility.Constant;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -13,7 +14,7 @@ import androidx.room.RoomDatabase;
 @Database(entities = Message.class, version = 1)
 public abstract class CometChatDB extends RoomDatabase {
 
-    private static final String TAG = CometChatDB.class.getSimpleName();
+    private static final String TAG = Constant.appName + CometChatDB.class.getSimpleName();
     public abstract MessageDao messageDao();
 
     private static volatile CometChatDB cometChatDB;

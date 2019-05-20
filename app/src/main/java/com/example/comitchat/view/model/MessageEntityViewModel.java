@@ -12,6 +12,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 public class MessageEntityViewModel extends AndroidViewModel {
 
@@ -36,10 +37,10 @@ public class MessageEntityViewModel extends AndroidViewModel {
         new InsertMessageAsync(messageDao).execute(message);
     }
 
-    public Message[] getFriendMessage(String friend) {
-//        return messageDao.getMessage(friend);
-        new GetFriendMessageAsync(messageDao).execute(friend);
-      return null;
+    public LiveData<List<Message>> getFriendMessage(String friend) {
+        return messageDao.getMessage(friend);
+//        new GetFriendMessageAsync(messageDao).execute(friend);
+
     }
 
     private class InsertMessageAsync extends AsyncTask<Message, Void, Void> {
@@ -72,7 +73,8 @@ public class MessageEntityViewModel extends AndroidViewModel {
         @Override
         protected Message[] doInBackground(String... strings) {
 
-            return messageDao.getMessage(strings[0]);
+//            messageDao.getMessage(strings[0]);
+            return null;
         }
 
         @Override
