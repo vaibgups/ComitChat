@@ -33,6 +33,8 @@ import com.example.comitchat.view.model.MessageEntityViewModel;
 import com.google.gson.Gson;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -68,14 +70,13 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_to_one_chat);
-        init();
         Intent intent = getIntent();
         if (intent.hasExtra(DataItem.class.getSimpleName())){
             dataItem = (DataItem) intent.getSerializableExtra(DataItem.class.getSimpleName());
             receiverID = dataItem.getUid();
-            toolbarChatScreeName.setText(dataItem.getName());
-            toolbarChatScreeNumber.setText(receiverID);
+
         }
+        init();
 
         sharedPreferences = getSharedPreferences(Constant.appName,MODE_PRIVATE);
         if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())){
@@ -94,10 +95,10 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onChanged(List<com.example.comitchat.entity.Message> messages) {
                 if(messages != null)
-                {
+                {/*
                     for (com.example.comitchat.entity.Message message : messages){
                         Log.i(TAG, "onChanged: live data"+ message.toString());
-                    }
+                    }*/
                 }
 
             }
@@ -131,6 +132,9 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         recyclerView.setAdapter(chatScreenAdapter);
         ivBtnSend.setOnClickListener(this);
 
+        toolbarChatScreeName.setText(dataItem.getName());
+        toolbarChatScreeNumber.setText(receiverID);
+
 
 
     }
@@ -163,6 +167,12 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         setScroll();
         TextMessage textMessage = new TextMessage(receiverID, messageText, messageType, receiverType);
 
+        try {
+            JSONObject jsonObject = new JSONObject("{\"latitude\":\"10\"}");
+            textMessage.setMetadata(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         CometChat.sendMessage(textMessage, new CometChat.CallbackListener<TextMessage>() {
             @Override
             public void onSuccess(TextMessage textMessage) {
@@ -179,15 +189,13 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
 
     private void saveMessage(Message message) {
         com.example.comitchat.entity.Message messageEntity = new com.example.comitchat.entity.Message();
-        messageEntity.setFriendUid(message.getFriendUid());
-        messageEntity.setMyUid(message.getMyUid());
-        messageEntity.setEmail(message.getEmail());
-        messageEntity.setName(message.getName());
-        messageEntity.setMessage(message.getMessage());
-        messageEntity.setMyMsg(message.isMyMsg());
-        messageEntityViewModel.insertMessage(messageEntity);
+        try {
+            String temp = gson.toJson(message);
+            messageEntity = gson.fromJson(temp, com.example.comitchat.entity.Message.class);
+            messageEntityViewModel.insertMessage(messageEntity);
+        }catch (Exception e) {
 
-
+        }
     }
 
     private void setScroll() {

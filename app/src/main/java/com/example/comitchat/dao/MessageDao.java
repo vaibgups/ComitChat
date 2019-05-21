@@ -17,5 +17,8 @@ public interface MessageDao {
 
     @Query("Select * from Message where friendUid = :friendUid")
     LiveData<List<Message>> getMessage(String friendUid);
+//    @Query("Select * from Message")
+//    LiveData<List<Message>> getMessage();
+
 
 }

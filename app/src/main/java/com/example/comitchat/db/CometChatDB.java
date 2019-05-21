@@ -11,7 +11,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = Message.class, version = 1)
+@Database(entities = Message.class, version = 1, exportSchema = false)
 public abstract class CometChatDB extends RoomDatabase {
 
     private static final String TAG = Constant.appName + CometChatDB.class.getSimpleName();
