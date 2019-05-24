@@ -39,7 +39,8 @@ public class MessageEntityViewModel extends AndroidViewModel  {
         Log.i(TAG, "onCleared: AndroidViewModel Destroy");
     }
 
-    public void insertMessage(Message message) {
+    public void insertMessage(Message message, OneToOneChatActivity oneToOneChatActivity) {
+        insertMessage = oneToOneChatActivity;
         new InsertMessageAsync(messageDao).execute(message);
     }
 
@@ -49,7 +50,7 @@ public class MessageEntityViewModel extends AndroidViewModel  {
 
     }
 
-    private class InsertMessageAsync extends AsyncTask<Message, Void, Void> {
+    private class InsertMessageAsync extends AsyncTask<Message, Void, Message> {
 
         MessageDao messageDao;
 
@@ -58,17 +59,23 @@ public class MessageEntityViewModel extends AndroidViewModel  {
         }
 
         @Override
-        protected Void doInBackground(Message... messages) {
+        protected Message doInBackground(Message... messages) {
             long id = messageDao.insert(messages[0]);
             messages[0].setId((int) id);
-            insertMessage.latestMessage(messages[0]);
+
 
             Log.i(TAG, "doInBackground: message inserted successful");
             Log.i(TAG, "doInBackground: id " + id);
             Log.i(TAG, "doInBackground: " + messages[0].toString());
 
 
-            return null;
+            return  messages[0];
+        }
+
+        @Override
+        protected void onPostExecute(Message messages) {
+            insertMessage.latestMessage(messages);
+
         }
     }
 

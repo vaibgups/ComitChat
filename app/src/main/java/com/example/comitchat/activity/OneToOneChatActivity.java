@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.CometChat;
@@ -36,7 +37,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class OneToOneChatActivity extends AppCompatActivity implements View.OnClickListener {
+public class OneToOneChatActivity extends AppCompatActivity implements View.OnClickListener, MessageEntityViewModel.InsertMessage {
 
     private static final String TAG = Constant.appName + OneToOneChatActivity.class.getSimpleName();
 
@@ -181,7 +182,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         try {
             String temp = gson.toJson(message);
             messageEntity = gson.fromJson(temp, com.example.comitchat.entity.Message.class);
-            messageEntityViewModel.insertMessage(messageEntity);
+            messageEntityViewModel.insertMessage(messageEntity,OneToOneChatActivity.this);
         } catch (Exception e) {
 
         }
@@ -238,5 +239,12 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
                 Log.d(TAG, "Media message received successfully: " + mediaMessage.toString());
             }
         });
+    }
+
+    @Override
+    public void latestMessage(com.example.comitchat.entity.Message message) {
+        Log.i(TAG, "latestMessage: "+message.toString());
+        Toast.makeText(this, ""+message.toString(), Toast.LENGTH_SHORT).show();
+
     }
 }
