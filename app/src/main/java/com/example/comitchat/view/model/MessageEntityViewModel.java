@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.comitchat.activity.OneToOneChatActivity;
 import com.example.comitchat.dao.MessageDao;
 import com.example.comitchat.db.CometChatDB;
 import com.example.comitchat.entity.Message;
@@ -14,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-public class MessageEntityViewModel extends AndroidViewModel {
+public class MessageEntityViewModel extends AndroidViewModel  {
 
     private static final String TAG = MessageEntityViewModel.class.getSimpleName();
 
@@ -22,10 +23,13 @@ public class MessageEntityViewModel extends AndroidViewModel {
     private CometChatDB cometChatDB;
     private LiveData<List<Message>> listLiveDataMessage;
 
+    private InsertMessage insertMessage;
+
     public MessageEntityViewModel(@NonNull Application application) {
         super(application);
         cometChatDB = CometChatDB.getCometChatDB(application);
         messageDao = cometChatDB.messageDao();
+
 
     }
 
@@ -56,6 +60,9 @@ public class MessageEntityViewModel extends AndroidViewModel {
         @Override
         protected Void doInBackground(Message... messages) {
             long id = messageDao.insert(messages[0]);
+            messages[0].setId((int) id);
+            insertMessage.latestMessage(messages[0]);
+
             Log.i(TAG, "doInBackground: message inserted successful");
             Log.i(TAG, "doInBackground: id " + id);
             Log.i(TAG, "doInBackground: " + messages[0].toString());
@@ -84,4 +91,13 @@ public class MessageEntityViewModel extends AndroidViewModel {
             return;
         }
     }
+
+
+    public interface InsertMessage{
+        void latestMessage(Message message);
+
+    }
+
+
+
 }

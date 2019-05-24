@@ -2,15 +2,7 @@ package com.example.comitchat.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -32,13 +24,17 @@ import com.example.comitchat.utility.Constant;
 import com.example.comitchat.view.model.MessageEntityViewModel;
 import com.google.gson.Gson;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class OneToOneChatActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -60,7 +56,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private Message message;
-    private List<Message> messageList;
+    private List<com.example.comitchat.entity.Message> messageListDB = new ArrayList<>();
     private ChatScreenAdapter chatScreenAdapter;
     private int newMessageCount;
     private MessageEntityViewModel messageEntityViewModel;
@@ -71,43 +67,40 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_to_one_chat);
         Intent intent = getIntent();
-        if (intent.hasExtra(DataItem.class.getSimpleName())){
+        if (intent.hasExtra(DataItem.class.getSimpleName())) {
             dataItem = (DataItem) intent.getSerializableExtra(DataItem.class.getSimpleName());
             receiverID = dataItem.getUid();
 
         }
         init();
 
-        sharedPreferences = getSharedPreferences(Constant.appName,MODE_PRIVATE);
-        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())){
-           String userDetails = sharedPreferences.getString(RegisterUserResponse.class.getSimpleName(),"");
-           if (userDetails != ""){
-               userRegister = (UserRegister) gson.fromJson(userDetails,UserRegister.class);
-           }
+        sharedPreferences = getSharedPreferences(Constant.appName, MODE_PRIVATE);
+        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())) {
+            String userDetails = sharedPreferences.getString(RegisterUserResponse.class.getSimpleName(), "");
+            if (userDetails != "") {
+                userRegister = (UserRegister) gson.fromJson(userDetails, UserRegister.class);
+            }
         }
 
     }
 
     private void init() {
 
+        chatScreenAdapter = new ChatScreenAdapter(messageListDB, OneToOneChatActivity.this);
         messageEntityViewModel = ViewModelProviders.of(OneToOneChatActivity.this).get(MessageEntityViewModel.class);
         messageEntityViewModel.getFriendMessage(receiverID).observe(OneToOneChatActivity.this, new Observer<List<com.example.comitchat.entity.Message>>() {
             @Override
             public void onChanged(List<com.example.comitchat.entity.Message> messages) {
-                if(messages != null)
-                {/*
-                    for (com.example.comitchat.entity.Message message : messages){
-                        Log.i(TAG, "onChanged: live data"+ message.toString());
-                    }*/
+                if (messages != null) {
+                    messageListDB = messages;
+//                    chatScreenAdapter.refreshMessage(messageListDB);
+                    setScroll();
                 }
 
             }
         });
-//        LiveData<List<com.example.comitchat.entity.Message>> message1 = messageEntityViewModel.getFriendMessage(receiverID);
 
-
-       /* Message message = new Message();
-        try {
+      /*  try {
 
             BeanUtils.copyProperties(message,message1.getValue().get(0));
             Log.i(TAG, "init: "+message1.getValue().get(0).toString());
@@ -120,30 +113,27 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
 
         }*/
         gson = new Gson();
-        messageList = new ArrayList<Message>();
-        chatScreenAdapter = new ChatScreenAdapter(messageList,OneToOneChatActivity.this);
         toolbarChatScreeName = findViewById(R.id.toolbar_chat_screen_name);
         toolbarChatScreeNumber = findViewById(R.id.toolbar_chat_screen_number);
         editTextChatMessage = findViewById(R.id.editTextChatMessage);
         ivBtnSend = findViewById(R.id.ivBtn_send);
         recyclerView = findViewById(R.id.rvChatMessages);
-        linearLayoutManager = new LinearLayoutManager(OneToOneChatActivity.this,RecyclerView.VERTICAL, false);        //        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager = new LinearLayoutManager(OneToOneChatActivity.this, RecyclerView.VERTICAL, false);        //        linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(chatScreenAdapter);
+        setScroll();
         ivBtnSend.setOnClickListener(this);
 
         toolbarChatScreeName.setText(dataItem.getName());
         toolbarChatScreeNumber.setText(receiverID);
 
 
-
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.ivBtn_send:
-            {
+        switch (v.getId()) {
+            case R.id.ivBtn_send: {
 
                 sendMessage();
             }
@@ -153,7 +143,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private void sendMessage() {
 
         message = new Message();
-        messageText =  editTextChatMessage.getText().toString();
+        messageText = editTextChatMessage.getText().toString();
         editTextChatMessage.setText("");
         message.setMyMsg(true);
         message.setMessage(messageText);
@@ -161,14 +151,12 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         message.setFriendUid(receiverID);
         message.setEmail(userRegister.getEmail());
         message.setName(userRegister.getName());
-        messageList.add(message);
         saveMessage(message);
-        chatScreenAdapter.notifyDataSetChanged();
-        setScroll();
+//        chatScreenAdapter.notifyDataSetChanged();
         TextMessage textMessage = new TextMessage(receiverID, messageText, messageType, receiverType);
 
         try {
-            JSONObject jsonObject = new JSONObject("{\"latitude\":\"10\"}");
+            JSONObject jsonObject = new JSONObject("{localMessageId:"+message.getId()+"}");
             textMessage.setMetadata(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -180,6 +168,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
 
                 Log.d(TAG, "Message sent successfully: " + textMessage.toString());
             }
+
             @Override
             public void onError(CometChatException e) {
                 Log.d(TAG, "Message sending failed with exception: " + e.getMessage());
@@ -193,7 +182,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
             String temp = gson.toJson(message);
             messageEntity = gson.fromJson(temp, com.example.comitchat.entity.Message.class);
             messageEntityViewModel.insertMessage(messageEntity);
-        }catch (Exception e) {
+        } catch (Exception e) {
 
         }
     }
@@ -201,7 +190,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private void setScroll() {
         if (chatScreenAdapter != null) {
             newMessageCount++;
-            chatScreenAdapter.refreshMessage(messageList);
+            chatScreenAdapter.refreshMessage(messageListDB);
 
             if ((chatScreenAdapter.getItemCount() - 1) - linearLayoutManager.findLastVisibleItemPosition() < 5) {
                 recyclerView.scrollToPosition(chatScreenAdapter.getItemCount() - 1);
@@ -241,11 +230,9 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
                 message.setFriendUid(textMessage.getSender().getUid());
                 message.setMyUid(userRegister.getUid());
                 saveMessage(message);
-                messageList.add(message);
-                chatScreenAdapter.notifyDataSetChanged();
-                setScroll();
                 Log.d(TAG, "Text message received successfully: " + textMessage.toString());
             }
+
             @Override
             public void onMediaMessageReceived(MediaMessage mediaMessage) {
                 Log.d(TAG, "Media message received successfully: " + mediaMessage.toString());

@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.comitchat.R;
-import com.example.comitchat.pojo.Message;
+import com.example.comitchat.entity.Message;
 import com.example.comitchat.utility.Constant;
 
 import java.util.List;
@@ -82,7 +82,6 @@ public class ChatScreenAdapter extends RecyclerView.Adapter<ChatScreenAdapter.Ri
     public int getItemCount() {
         return messageList.size();
     }
-
     public void refreshMessage(List<Message> messageList){
         this.messageList = messageList;
         notifyDataSetChanged();
