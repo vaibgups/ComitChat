@@ -204,7 +204,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onResume() {
         super.onResume();
-        receivedMessage();
+//        receivedMessage();
     }
 
     @Override
@@ -220,7 +220,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void receivedMessage() {
-        CometChat.addMessageListener(userRegister.getUid(), new CometChat.MessageListener() {
+       /* CometChat.addMessageListener(userRegister.getUid(), new CometChat.MessageListener() {
             @Override
             public void onTextMessageReceived(TextMessage textMessage) {
                 message = new Message();
@@ -238,7 +238,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
             public void onMediaMessageReceived(MediaMessage mediaMessage) {
                 Log.d(TAG, "Media message received successfully: " + mediaMessage.toString());
             }
-        });
+        });*/
     }
 
     @Override

@@ -6,7 +6,17 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
+
+import com.cometchat.pro.core.CometChat;
+import com.cometchat.pro.exceptions.CometChatException;
+import com.cometchat.pro.models.MediaMessage;
+import com.cometchat.pro.models.TextMessage;
+import com.example.comitchat.modal.UserRegister;
+import com.example.comitchat.pojo.Message;
+import com.example.comitchat.view.model.MessageEntityViewModel;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,8 +36,9 @@ import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.utility.Constant;
 import com.example.comitchat.utility.PermissionClass;
 import com.example.comitchat.adapter.viewpager.ViewPagerAdapter;
+import com.google.gson.Gson;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MessageEntityViewModel.InsertMessage {
 
     private static final String TAG = Constant.appName + MainActivity.class.getSimpleName();
     private Toolbar toolbar;
@@ -37,18 +48,32 @@ public class MainActivity extends AppCompatActivity {
     private PermissionClass permissionClass;
     private RegisterUserResponse registerUserResponse;
 
+    private Gson gson;
     private RequestQueue mRequestQueue;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-
+    private UserRegister userRegister;
+    private Message message;
+    private MessageEntityViewModel messageEntityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        gson = new Gson();
         permissionClass = new PermissionClass(this,this);
         permissionClass.contacts();
         getIntentData();
+        messageEntityViewModel = ViewModelProviders.of(MainActivity.this).get(MessageEntityViewModel.class);
+
+
+        sharedPreferences = getSharedPreferences(Constant.appName, MODE_PRIVATE);
+        if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())) {
+            String userDetails = sharedPreferences.getString(RegisterUserResponse.class.getSimpleName(), "");
+            if (userDetails != "") {
+                userRegister = (UserRegister) gson.fromJson(userDetails, UserRegister.class);
+            }
+        }
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -134,20 +159,75 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        CometChat.addMessageListener(userRegister.getUid(), new CometChat.MessageListener() {
+            @Override
+            public void onTextMessageReceived(TextMessage textMessage) {
+                message = new Message();
+                message.setMessage(textMessage.getText());
+                message.setMyMsg(false);
+                message.setEmail(textMessage.getSender().getEmail());
+                message.setName(textMessage.getSender().getName());
+                message.setFriendUid(textMessage.getSender().getUid());
+                message.setMyUid(userRegister.getUid());
+                saveMessage(message);
+                Log.d(TAG, "Text message received successfully: " + textMessage.toString());
+            }
+
+            @Override
+            public void onMediaMessageReceived(MediaMessage mediaMessage) {
+                Log.d(TAG, "Media message received successfully: " + mediaMessage.toString());
+            }
+        });
+    }
+
+    private void saveMessage(Message message) {
+        com.example.comitchat.entity.Message messageEntity = new com.example.comitchat.entity.Message();
+        try {
+            String temp = gson.toJson(message);
+            messageEntity = gson.fromJson(temp, com.example.comitchat.entity.Message.class);
+            messageEntityViewModel.insertMessage(messageEntity,MainActivity.this);
+        } catch (Exception e) {
+
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
                 sharedPreferences = getSharedPreferences(Constant.appName,MODE_PRIVATE);
                 if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())){
-                    editor = sharedPreferences.edit();
-                    editor.clear();
-                    editor.commit();
-                    startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                    CometChat.logout(new CometChat.CallbackListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            editor = sharedPreferences.edit();
+                            editor.clear();
+                            editor.commit();
+                            Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onError(CometChatException e) {
+                            Log.d(TAG, "onError: "+e.getMessage());
+                        }
+                    });
                 }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void latestMessage(com.example.comitchat.entity.Message message) {
+        Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
     }
 }

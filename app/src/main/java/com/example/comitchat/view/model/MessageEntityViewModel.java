@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.comitchat.activity.MainActivity;
 import com.example.comitchat.activity.OneToOneChatActivity;
 import com.example.comitchat.dao.MessageDao;
 import com.example.comitchat.db.CometChatDB;
@@ -41,6 +42,11 @@ public class MessageEntityViewModel extends AndroidViewModel  {
 
     public void insertMessage(Message message, OneToOneChatActivity oneToOneChatActivity) {
         insertMessage = oneToOneChatActivity;
+        new InsertMessageAsync(messageDao).execute(message);
+    }
+
+    public void insertMessage(Message message, MainActivity mainActivity) {
+        insertMessage = mainActivity;
         new InsertMessageAsync(messageDao).execute(message);
     }
 
