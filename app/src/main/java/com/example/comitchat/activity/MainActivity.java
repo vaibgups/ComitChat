@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
     private UserRegister userRegister;
     private Message message;
     private MessageEntityViewModel messageEntityViewModel;
+    private String listenerID = "message_listener";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +175,9 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
                 message.setName(textMessage.getSender().getName());
                 message.setFriendUid(textMessage.getSender().getUid());
                 message.setMyUid(userRegister.getUid());
-                saveMessage(message);
+                if (message.getMyUid().equals(userRegister.getUid())) {
+                    saveMessage(message);
+                }
                 Log.d(TAG, "Text message received successfully: " + textMessage.toString());
             }
 
@@ -208,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
                             editor = sharedPreferences.edit();
                             editor.clear();
                             editor.commit();
+                            CometChat.removeMessageListener(listenerID);
                             Intent intent=new Intent(MainActivity.this, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -230,4 +234,17 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
     public void latestMessage(com.example.comitchat.entity.Message message) {
         Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        removeMessageListener();
+    }
+
+    private void removeMessageListener() {
+        CometChat.removeMessageListener(listenerID);
+    }
+
+
 }

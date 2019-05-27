@@ -94,7 +94,6 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
             public void onChanged(List<com.example.comitchat.entity.Message> messages) {
                 if (messages != null) {
                     messageListDB = messages;
-//                    chatScreenAdapter.refreshMessage(messageListDB);
                     setScroll();
                 }
 
@@ -119,7 +118,8 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         editTextChatMessage = findViewById(R.id.editTextChatMessage);
         ivBtnSend = findViewById(R.id.ivBtn_send);
         recyclerView = findViewById(R.id.rvChatMessages);
-        linearLayoutManager = new LinearLayoutManager(OneToOneChatActivity.this, RecyclerView.VERTICAL, false);        //        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager = new LinearLayoutManager(OneToOneChatActivity.this);
+//        linearLayoutManager.setReverseLayout(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(chatScreenAdapter);
         setScroll();
@@ -135,7 +135,6 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivBtn_send: {
-
                 sendMessage();
             }
         }
@@ -153,7 +152,6 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         message.setEmail(userRegister.getEmail());
         message.setName(userRegister.getName());
         saveMessage(message);
-//        chatScreenAdapter.notifyDataSetChanged();
         TextMessage textMessage = new TextMessage(receiverID, messageText, messageType, receiverType);
 
         try {
@@ -193,10 +191,11 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
             newMessageCount++;
             chatScreenAdapter.refreshMessage(messageListDB);
 
-            if ((chatScreenAdapter.getItemCount() - 1) - linearLayoutManager.findLastVisibleItemPosition() < 5) {
+            if (chatScreenAdapter.getItemCount() != 0) {
                 recyclerView.scrollToPosition(chatScreenAdapter.getItemCount() - 1);
                 newMessageCount = 0;
             }
+
         }
     }
 
@@ -210,13 +209,13 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onPause() {
         super.onPause();
-        CometChat.removeMessageListener(listenerID);
+//        CometChat.removeMessageListener(listenerID);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CometChat.removeMessageListener(listenerID);
+//        CometChat.removeMessageListener(listenerID);
     }
 
     private void receivedMessage() {
