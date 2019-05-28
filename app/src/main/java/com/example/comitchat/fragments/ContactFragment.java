@@ -89,7 +89,7 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
         gson = new Gson();
         recyclerView = view.findViewById(R.id.contactFragmentRV);
         recyclerView.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
@@ -112,11 +112,16 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
                     @Override
                     public void onResponse(JSONObject response) {
                         userListResponse = gson.fromJson(String.valueOf(response), UserListResponse.class);
-                        /*for (DataItem dataItem : userListResponse.getData()) {
-                            if (!dataItem.getUid().equals(userRegister.getUid())  ) {
-                                dataItemList.add(dataItem);
+                        DataItem removeRequired = null ;
+                        for (DataItem dataItem : userListResponse.getData()) {
+                            if(dataItem.getUid().equals(userRegister.getUid())){
+                                removeRequired = dataItem;
                             }
-                        }*/
+                        }
+                        Log.i(TAG, "onResponse: before remove"+userListResponse.getData().size());
+                        userListResponse.getData().remove(removeRequired);
+                        Log.i(TAG, "onResponse: after remove"+userListResponse.getData().size());
+
                         Log.d(TAG, response.toString());
                         contactAdapter = new ContactAdapter(getContext(), userListResponse.getData(), ContactFragment.this);
                         recyclerView.setAdapter(contactAdapter);

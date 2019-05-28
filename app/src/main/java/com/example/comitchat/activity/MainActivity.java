@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
 
     @Override
     public void latestMessage(com.example.comitchat.entity.Message message) {
-        Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

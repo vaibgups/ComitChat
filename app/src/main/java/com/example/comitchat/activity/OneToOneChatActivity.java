@@ -195,55 +195,11 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
                 recyclerView.scrollToPosition(chatScreenAdapter.getItemCount() - 1);
                 newMessageCount = 0;
             }
-
         }
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        receivedMessage();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        CometChat.removeMessageListener(listenerID);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        CometChat.removeMessageListener(listenerID);
-    }
-
-    private void receivedMessage() {
-       /* CometChat.addMessageListener(userRegister.getUid(), new CometChat.MessageListener() {
-            @Override
-            public void onTextMessageReceived(TextMessage textMessage) {
-                message = new Message();
-                message.setMessage(textMessage.getText());
-                message.setMyMsg(false);
-                message.setEmail(textMessage.getSender().getEmail());
-                message.setName(textMessage.getSender().getName());
-                message.setFriendUid(textMessage.getSender().getUid());
-                message.setMyUid(userRegister.getUid());
-                saveMessage(message);
-                Log.d(TAG, "Text message received successfully: " + textMessage.toString());
-            }
-
-            @Override
-            public void onMediaMessageReceived(MediaMessage mediaMessage) {
-                Log.d(TAG, "Media message received successfully: " + mediaMessage.toString());
-            }
-        });*/
-    }
-
     @Override
     public void latestMessage(com.example.comitchat.entity.Message message) {
         Log.i(TAG, "latestMessage: "+message.toString());
-        Toast.makeText(this, ""+message.toString(), Toast.LENGTH_SHORT).show();
 
     }
 }
