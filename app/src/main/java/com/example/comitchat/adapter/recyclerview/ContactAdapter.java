@@ -17,7 +17,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
 
     private Context context;
-//    private ContactClass contactClass;
     private DataItem contactClass;
     private  List<DataItem>  contactClassList;
     private OnClickListener onClickListener;
