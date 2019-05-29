@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.MediaMessage;
+import com.cometchat.pro.models.MessageReceipt;
 import com.cometchat.pro.models.TextMessage;
 import com.example.comitchat.modal.UserRegister;
 import com.example.comitchat.pojo.Message;
@@ -168,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
         CometChat.addMessageListener(userRegister.getUid(), new CometChat.MessageListener() {
             @Override
             public void onTextMessageReceived(TextMessage textMessage) {
+//                CometChat.markMessageAsRead(textMessage);
                 message = new Message();
                 message.setMessage(textMessage.getText());
                 message.setMyMsg(false);
@@ -179,6 +181,15 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
                     saveMessage(message);
                 }
                 Log.d(TAG, "Text message received successfully: " + textMessage.toString());
+            }
+            @Override
+            public void onMessageDelivered(MessageReceipt messageReceipt) {
+                Log.e(TAG, "onMessageDelivered: " + messageReceipt.toString());
+            }
+
+            @Override
+            public void onMessageRead(MessageReceipt messageReceipt) {
+                Log.e(TAG, "onMessageRead: " + messageReceipt.toString());
             }
 
             @Override

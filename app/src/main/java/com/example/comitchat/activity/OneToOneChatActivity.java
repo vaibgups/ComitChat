@@ -14,6 +14,7 @@ import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.MediaMessage;
+import com.cometchat.pro.models.MessageReceipt;
 import com.cometchat.pro.models.TextMessage;
 import com.example.comitchat.R;
 import com.example.comitchat.adapter.recyclerview.ChatScreenAdapter;
@@ -95,6 +96,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
                 if (messages != null) {
                     messageListDB = messages;
                     setScroll();
+
                 }
 
             }
@@ -142,9 +144,10 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
 
     private void sendMessage() {
 
-        message = new Message();
+
         messageText = editTextChatMessage.getText().toString();
         editTextChatMessage.setText("");
+        message = new Message();
         message.setMyMsg(true);
         message.setMessage(messageText);
         message.setMyUid(userRegister.getUid());
@@ -171,6 +174,22 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onError(CometChatException e) {
                 Log.d(TAG, "Message sending failed with exception: " + e.getMessage());
+            }
+
+
+        });
+    }
+
+    private void addMessageListener(){
+        CometChat.addMessageListener("Listener 1", new CometChat.MessageListener() {
+            @Override
+            public void onMessageDelivered(MessageReceipt messageReceipt) {
+                Log.e(TAG, "onMessageDelivered: " + messageReceipt.toString());
+            }
+
+            @Override
+            public void onMessageRead(MessageReceipt messageReceipt) {
+                Log.e(TAG, "onMessageRead: " + messageReceipt.toString());
             }
         });
     }

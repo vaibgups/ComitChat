@@ -22,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.comitchat.R;
 import com.example.comitchat.activity.OneToOneChatActivity;
 import com.example.comitchat.adapter.recyclerview.ContactAdapter;
+import com.example.comitchat.entity.UserTable;
 import com.example.comitchat.modal.UserRegister;
 import com.example.comitchat.modal.user.list.DataItem;
 import com.example.comitchat.modal.user.list.UserListResponse;
@@ -29,9 +30,11 @@ import com.example.comitchat.modal.user.register.RegisterUserResponse;
 import com.example.comitchat.singleton.SingletonRequestQueue;
 import com.example.comitchat.utility.Constant;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,6 +121,9 @@ public class ContactFragment extends Fragment implements ContactAdapter.OnClickL
                                 removeRequired = dataItem;
                             }
                         }
+                        String temp = gson.toJson(userListResponse.getData());
+                        Type founderListType = new TypeToken<ArrayList<UserTable>>(){}.getType();
+                        List<UserTable> userTableList = gson.fromJson(temp, founderListType);
                         Log.i(TAG, "onResponse: before remove"+userListResponse.getData().size());
                         userListResponse.getData().remove(removeRequired);
                         Log.i(TAG, "onResponse: after remove"+userListResponse.getData().size());

@@ -1,5 +1,7 @@
 package com.example.comitchat.entity;
 
+import org.json.JSONObject;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -18,7 +20,15 @@ public class Message {
     private String email;
     @NonNull
     private boolean isMyMsg;
+    @NonNull
     private String message;
+    private String messageID;
+    @NonNull
+    private long sentAt;
+    private long deliveredAt;
+    private long readAt;
+    private String metadata;
+
 
     public int getId() {
         return id;
@@ -78,6 +88,45 @@ public class Message {
         this.message = message;
     }
 
+    public String getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(String messageID) {
+        this.messageID = messageID;
+    }
+
+    public long getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(long sentAt) {
+        this.sentAt = sentAt;
+    }
+
+    public long getDeliveredAt() {
+        return deliveredAt;
+    }
+
+    public void setDeliveredAt(long deliveredAt) {
+        this.deliveredAt = deliveredAt;
+    }
+
+    public long getReadAt() {
+        return readAt;
+    }
+
+    public void setReadAt(long readAt) {
+        this.readAt = readAt;
+    }
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
 
     @Override
     public String toString() {
@@ -88,6 +137,11 @@ public class Message {
                         "name = '" + name + '\'' +
                         "email = '" + email + '\'' +
                         "message = '" + message + '\'' +
+                        "messageID = '" + messageID + '\'' +
+                        "sentAt = '" + sentAt + '\'' +
+                        "deliveredAt = '" + deliveredAt + '\'' +
+                        "readAt = '" + readAt + '\'' +
+                        "metadata = '" + metadata + '\'' +
                         "}";
     }
 }
