@@ -179,11 +179,14 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
                 message.setMyUid(userRegister.getUid());
                 if (message.getMyUid().equals(userRegister.getUid())) {
                     saveMessage(message);
+//                    CometChat.markMessageAsRead(textMessage);
+
                 }
                 Log.d(TAG, "Text message received successfully: " + textMessage.toString());
             }
             @Override
             public void onMessageDelivered(MessageReceipt messageReceipt) {
+
                 Log.e(TAG, "onMessageDelivered: " + messageReceipt.toString());
             }
 

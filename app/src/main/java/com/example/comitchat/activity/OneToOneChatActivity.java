@@ -137,7 +137,8 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivBtn_send: {
-                sendMessage();
+//                sendMessage();
+                saveMessage();
             }
         }
     }
@@ -145,7 +146,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     private void sendMessage() {
 
 
-        messageText = editTextChatMessage.getText().toString();
+      /*  messageText = editTextChatMessage.getText().toString();
         editTextChatMessage.setText("");
         message = new Message();
         message.setMyMsg(true);
@@ -154,11 +155,13 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         message.setFriendUid(receiverID);
         message.setEmail(userRegister.getEmail());
         message.setName(userRegister.getName());
-        saveMessage(message);
+        saveMessage(message);*/
         TextMessage textMessage = new TextMessage(receiverID, messageText, messageType, receiverType);
 
         try {
-            JSONObject jsonObject = new JSONObject("{localMessageId:"+message.getId()+"}");
+//            JSONObject jsonObject = new JSONObject("{localMessageId:"+message.getId()+"}");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("localMessageID",message.getId());
             textMessage.setMetadata(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -168,6 +171,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
             public void onSuccess(TextMessage textMessage) {
 
 
+                String textMessageString = gson.toJson(textMessage);
                 Log.d(TAG, "Message sent successfully: " + textMessage.toString());
             }
 
@@ -181,7 +185,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void addMessageListener(){
-        CometChat.addMessageListener("Listener 1", new CometChat.MessageListener() {
+        CometChat.addMessageListener(receiverID, new CometChat.MessageListener() {
             @Override
             public void onMessageDelivered(MessageReceipt messageReceipt) {
                 Log.e(TAG, "onMessageDelivered: " + messageReceipt.toString());
@@ -194,7 +198,16 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
-    private void saveMessage(Message message) {
+    private void saveMessage() {
+        messageText = editTextChatMessage.getText().toString();
+        editTextChatMessage.setText("");
+        message = new Message();
+        message.setMyMsg(true);
+        message.setMessage(messageText);
+        message.setMyUid(userRegister.getUid());
+        message.setFriendUid(receiverID);
+        message.setEmail(userRegister.getEmail());
+        message.setName(userRegister.getName());
         com.example.comitchat.entity.Message messageEntity = new com.example.comitchat.entity.Message();
         try {
             String temp = gson.toJson(message);
@@ -217,8 +230,12 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         }
     }
     @Override
-    public void latestMessage(com.example.comitchat.entity.Message message) {
-        Log.i(TAG, "latestMessage: "+message.toString());
+    public void latestMessage(com.example.comitchat.entity.Message _message) {
+        Log.i(TAG, "latestMessage: "+_message.toString());
+        if (_message.getId()>0){
+            message.setId(_message.getId());
+            sendMessage();
+        }
 
     }
 }
