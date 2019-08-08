@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements MessageEntityView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         gson = new Gson();
-        permissionClass = new PermissionClass(this,this);
-        permissionClass.contacts();
+//        permissionClass = new PermissionClass(this,this);
+//        permissionClass.contacts();
         getIntentData();
         messageEntityViewModel = ViewModelProviders.of(MainActivity.this).get(MessageEntityViewModel.class);
 

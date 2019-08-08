@@ -41,8 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         sharedPreferences = getSharedPreferences(Constant.appName, MODE_PRIVATE);
         if (sharedPreferences.contains(RegisterUserResponse.class.getSimpleName())) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         } else {
             init();

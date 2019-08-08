@@ -159,7 +159,6 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
         TextMessage textMessage = new TextMessage(receiverID, messageText, messageType, receiverType);
 
         try {
-//            JSONObject jsonObject = new JSONObject("{localMessageId:"+message.getId()+"}");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("localMessageID",message.getId());
             textMessage.setMetadata(jsonObject);
@@ -171,7 +170,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements View.OnCl
             public void onSuccess(TextMessage textMessage) {
 
 
-                String textMessageString = gson.toJson(textMessage);
+//                String textMessageString = gson.toJson(textMessage);
                 Log.d(TAG, "Message sent successfully: " + textMessage.toString());
             }
 
